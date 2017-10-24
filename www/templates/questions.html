@@ -1,0 +1,38 @@
+<ion-view view-title="Question" hide-nav-bar="true">
+  <ion-content class="question no-header">
+    <center>
+      <div ng-repeat="question in questions">
+        <br>
+        <h3>{{question.name}} </h3>
+        <h4>{{question.points}}</h4>
+        <p class="theQuestion">{{question.question}}</p>
+        <p class="hint">{{question.hint}}</p>
+        <br>
+        <br>
+        <h4>Svar</h4>
+        <div class="displayAnswer" ng-if="displayAnswerState">
+          {{question.answer}}
+        </div>
+        <a class="tapToSeeAnswer button button-small button-assertive" ng-click="showAnswer()" ng-if="!displayAnswerState">
+          Tryk for svar
+        </a>
+        <br><br><br>
+        <div class="row selectPlayerWin">
+          <div class="col button button-small button-dark" ng-repeat="player in players" ng-click="updatePlayerPoints(player, question.points)">
+            <h1 class="playerName">
+              {{player.name}}
+            </h1>
+            <div class="playerPoints">
+              {{player.points}}
+            </div>
+          </div>
+        </div>
+        <div class="row selectPlayerWin">
+          <div class="col button button-small button-dark" ng-click="$ionicGoBack()">
+            Ingen ved det
+          </div>
+        </div>
+      </div>
+    </center>
+  </ion-content>
+</ion-view>

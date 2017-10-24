@@ -1,0 +1,65 @@
+<ion-modal-view class="scoreBoard-modal ion-nifty-modal">
+  <div class="ion-modal-content-custom">
+    <ion-content class="scoreBoardList padding">
+      <div class="fireworks-wrapper">
+        <svg viewBox="-500 -500 1000 1000" >
+          <defs>
+            <clippath id="clip-path">
+              <circle class="bg" r="1450"></circle>
+            </clippath>
+            <lineargradient id="sky-gradient" x1="0" y1="300" x2="0" y2="-300" gradientunits="userSpaceOnUse">
+              <stop class="sky-bright" offset="0"></stop>
+              <stop class="sky-dark" offset="1"></stop>
+            </lineargradient>
+          </defs>
+          <g clip-path="url(#clip-path)">
+            <rect class="sky" x="-500" y="-500" width="1000" height="1000" fill="url(#sky-gradient)"></rect>
+            <g class="firework">
+              <g class="sparks">
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+              </g>
+              <g class="sparks">
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+              </g>
+              <g class="sparks">
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+              </g>
+              <g class="sparks">
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+                <circle class="spark" id="spark" r="10"></circle>
+              </g>
+            </g>
+            <polygon class="mountains" points="-500,150 -250,0 0,150 250,0 500,150 500,500 -500 500"></polygon>
+          </g>
+        </svg>
+      </div>
+      <div class="playersList">
+        <div class="players" ng-class='{theWinner:$first}' ng-repeat="player in players | orderBy: '-points' ">
+          <span class="number">{{$index +1}}.</span>
+          <span class="name">{{player.name}}</span>
+          <span class="points">{{player.points}}</span>
+        </div>
+        <button class="button button-full button-assertive" ng-click="plagAgain(); closeModal()">Play again</button>
+      </div>
+    </ion-content>
+  </div>
+</ion-modal-view>

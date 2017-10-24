@@ -1,0 +1,87 @@
+<ion-view view-title="BLOB" hide-nav-bar="true" ng-controller="CollectionsCtrl">
+  <!-- <ion-content class="welcome no-header"> -->
+  <main class="welcome wowbg" id="check-height">
+
+    <!-- <div class="top-section">
+      <h1 class="padding">Smask Quiz</h1>
+      <p class="welcome-message padding">
+        Det sjov – Smask før din nabo!
+      </p>
+    </div> -->
+    <!-- <div class="top-slider">
+      <ion-slides options="collectionsTopSlider" slider="data.slider">
+        <ion-slide-page class="">
+          <div >
+            <img src=""
+          </div>
+        </ion-slide-page>
+        <ion-slide-page class="">
+          <div >
+            asd
+          </div>
+        </ion-slide-page>
+      </ion-slides>
+    </div> -->
+    <div class="morph-wrap">
+      <svg class="morph" width="1400" height="770" viewBox="0 0 1400 770">
+        <path d="M 262.9,252.2 C 210.1,338.2 212.6,487.6 288.8,553.9 372.2,626.5 511.2,517.8 620.3,536.3 750.6,558.4 860.3,723 987.3,686.5 1089,657.3 1168,534.7 1173,429.2 1178,313.7 1096,189.1 995.1,130.7 852.1,47.07 658.8,78.95 498.1,119.2 410.7,141.1 322.6,154.8 262.9,252.2 Z"/>
+      </svg>
+    </div>
+
+    <div class="groupsList content-wrap" ng-repeat="group in groups track by $index">
+      <div class="groupBackgroundColor"></div>
+      <!-- <div class="groupBackgroundColor" style=""></div> -->
+      <h3 ng-if="group.name" class="group-headline">{{group.name}}</h3>
+      <p ng-if="group.description" class="group-intro">{{group.description}}</p>
+
+      <div class="collectionsList">
+        <div ng-repeat="collection in group.included_collections" class="content ontent--layout">
+          <div class="slide-content">
+            <ion-slides options="collection.included_categories.length == 1 ? collectionsSliderSettingsOnlyOne : collectionsSliderSettings" ng-if="displaySlider" slider="data.slider">
+              <!-- Collection Start  -->
+              <ion-slide-page class="collectionsItem first">
+                <div class="categoryImage">
+                  <div class="overlay">
+                    <div class="collectionIcon">
+                      <img class="theIcon" ng-src="{{collection.icon}}">
+                    </div>
+                    <h3 class="collection-headline">
+                      {{ collection.name }}
+                    </h3>
+                  </div>
+                </div>
+              </ion-slide-page>
+              <!-- Categories in Collections -->
+              <ion-slide-page class="collectionsItem animated" ng-repeat-start="category in collection.included_categories " ng-class="{'pulse': category.id == selected}">
+                <div class="categoryImage" style="background-image: url('{{ category.cover_image }}')">
+                  <div class="overlay" ng-click="openViewCategorie(category)">
+                  </div>
+                  <div class="selectBox checked" ng-show="categories.id == category.id" ng-repeat="categories in selectedCategories" ng-click="selectCategorie(category); select(category.id)">
+                  </div>
+                </div>
+                <div class="categoryContent">
+                  <h5>{{ category.categoryTitle }}</h5>
+                </div>
+              </ion-slide-page>
+              <!-- View more from collection -->
+              <ion-slide-page class="collectionsItem" ng-repeat-end="" ng-if="$index == collection.included_categories.length -1">
+                <div class="categoryImage" ng-click="selectCollection(collection)">
+                  <div class="overlay">
+                    <h3>Se alle</h3>
+                    <h5>{{ collection.name }}</h5>
+                  </div>
+                </div>
+              </ion-slide-page>
+            </ion-slides>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <br><br><br><br>
+  </main>
+  <!-- </ion-content> -->
+  <!-- </div> -->
+</ion-view>

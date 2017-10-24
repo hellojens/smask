@@ -1,0 +1,14 @@
+<ion-view view-title="Game Board" hide-nav-bar="true" hide-back-button="true">
+  <ion-content class="gameboard no-header">
+    <div class="">
+      <div class="gamelboardList" ng-if="questionsLoaded" ng-repeat="(key, value) in selectedGameboard | groupBy: 'name'">
+        <h3>{{key}}</h3>
+        <div class="row">
+          <button class="col button button-small button-assertive" ng-repeat="questionList in value" ng-click="selectQuestion(questionList)" ng-class="{'played' : questionList.played}">
+            {{questionList.points}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

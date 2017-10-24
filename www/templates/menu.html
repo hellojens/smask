@@ -1,0 +1,139 @@
+<ion-side-menus enable-menu-with-back-views="false">
+
+  <div class="startGameMenu" ng-if="gameStarted != true && selectedCategories.length > 0">
+    <div class="chooseFive">
+      Vælg 5 kategorier
+    </div>
+    <ul class="slots active" >
+      <li ng-repeat="categories in selectedCategories track by $index" ng-click="selectCategorie(categories)">
+        <img ng-src="{{categories.icon}}">
+      </li>
+    </ul>
+    <ul class="slots empty">
+      <li class="empty">
+      </li>
+      <li class="empty">
+      </li>
+      <li class="empty">
+      </li>
+      <li class="empty">
+      </li>
+      <li class="empty">
+      </li>
+    </ul>
+    <div class="startGameButton button button-dark" ng-click="startGame(selectedCategories)">
+      <span>SMASK</span>
+    </div>
+  </div>
+  <div class="inGameMenu" ng-class="{'top': gameStarted == false}" ng-hide="$state.includes('app.question') ||  $state.includes('app.intro')">
+    <section class="cd-section">
+    	<!-- section content here -->
+
+    	<div class="cd-modal-action">
+    		<a class="btn openInGamMenuButton" type="button" data-type="modal-trigger">
+          <img class="diceIcon" ng-src="./img/icons/player-menu.png">
+          <img class="playerIcon" ng-src="./img/icons/add-users.png">
+        </a>
+    		<span class="cd-modal-bg"></span>
+    	</div>
+
+    	<div class="cd-modal">
+    		<div class="cd-modal-content">
+    			<!-- modal content here -->
+          <ion-content class="playerList padding no-header">
+            <h4 class="title">Spiller oversigt</h4>
+            <p>Skub til venstre for at fjerne spillere fra listen</p>
+
+            <ion-list class="listlist-dark" show-delete="data.showDelete" show-reorder="data.showReorder">
+              <ion-item class="item item-dark" ng-repeat="player in players" item="player" class="item-remove-animate">
+                <div class="playerNumber">
+                  Spiller {{($index +1)}}
+                </div>
+                <div class="playerName">
+                  {{player.name}}
+                </div>
+                <span class="item-note">
+                 {{player.totalWins}} Wins
+                </span>
+                <ion-delete-button class="ion-minus-circled" ng-click="remove(player)">
+                </ion-delete-button>
+                <ion-option-button class="button-dark" ng-click="remove(player)">
+                  <i class="icon ion-trash-a"></i> Slet
+                </ion-option-button>
+                <ion-option-button class="button-dark" ng-click="resetPlayer(player)">
+                  <i class="icon ion-android-refresh"></i> Nulstil
+                </ion-option-button>
+                <ion-reorder-button class="icon-dark ion-navicon" on-reorder="moveItem(player, $fromIndex, $toIndex)"></ion-reorder-button>
+              </ion-item>
+            </ion-list>
+            <div class="list list-dark">
+              <div class="item item-dark item-input-inset wowbg">
+                <label class="item-input-wrapper">
+                  <input type="text" ng-model="newPlayerName" placeholder="Tilføj ny spiller">
+                </label>
+                <button class="button button-small" ng-click="addNewPlayer(newPlayerName); newPlayerName = ''">
+                  Tilføj
+                </button>
+              </div>
+            </div>
+          </ion-content>
+          <div class="cd-modal-close-text" ng-if="gameStarted" ng-click="startOver(players)">Afslut spil</div>
+    		</div>
+    	</div>
+
+    	<div class="cd-modal-close cd-modal-close-now checkmark">Close</div>
+    	<div class="cd-modal-close cd-modal-close-now start-over" ng-class="{'active': gameStarted == true}" ng-click="startOver(players)"></div>
+    </section>
+  </div>
+
+
+
+  <ion-side-menu-content class="">
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <button class="button button-clear button-assertive" ng-if="!gameStarted" ng-click="openPlayerModal()">
+          <i class="icon ion-person-stalker"></i>
+        </button>
+        <button class="button button-clear button-assertive" ng-if="gameStarted" ng-click="startOver(players)">
+          <i class="icon ion-android-exit"></i>
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left">
+    <ion-header-bar class="bar-stable">
+      <h1 class="title">Menu</h1>
+    </ion-header-bar>
+    <ion-content>
+      <ion-list>
+        <!-- <ion-item menu-close ng-click="login()">
+          Login
+        </ion-item>
+        <ion-item menu-close href="#/app/search">
+          Search
+        </ion-item>
+        <ion-item menu-close href="#/app/browse">
+          Browse
+        </ion-item> -->
+        <ion-item class="item item-dark" menu-close href="#/app/playlists">
+          Start Game
+        </ion-item>
+        <ion-item class="item item-dark"  menu-close ng-click="openPlayerModal()">
+          Players
+        </ion-item>
+        <ion-item class="item item-dark startBlob" menu-close href="#/app/blob">
+          blob
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

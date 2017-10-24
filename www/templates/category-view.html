@@ -1,0 +1,25 @@
+<ion-modal-view class="category-view ion-nifty-modal animated slideUp">
+  <div class="ion-modal-content-custom">
+    <ion-content class="category-view-content padding">
+      <div class="cover-image">
+        <img ng-src="{{categoryDetails.cover_image}}">
+      </div>
+      <h3>{{categoryDetails.categoryTitle}}</h3>
+      <p>{{categoryDetails.description}} </p>
+      <!-- <b>Progress: {{categoryDetails.progress}} </b> -->
+    </ion-content>
+    <div class="row modal-button-section">
+      <div class="col col-33">
+        <button class="button button-outline button-light button-block" ng-click="closeModal()">
+          Luk
+        </button>
+      </div>
+      <div class="col col-67">
+        <button class="button button-assertive button-block " ng-click="selectCategorie(categoryDetails); select(categoryDetails.id); closeModal()">
+          Tilføj
+          <!-- <img ng-src="../img/icons/checkmark.svg"> -->
+        </button>
+      </div>
+    </div>
+  </div>
+</ion-modal-view>

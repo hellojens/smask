@@ -1,0 +1,61 @@
+<ion-view hide-nav-bar="true" hide-back-button="true" cache-view="false" >
+    <ion-content class="intro" scroll="false">
+      <div class="screen-1">
+        <!--top-->
+        <img src="./img/logo.png" class="logo animated slideInDown">
+        <!--slide-->
+        <ion-slide-box class="animated fadeIn">
+            <ion-slide class="slide">
+                <div class="slide-content">
+                    <h1>
+                      I SMASK skal man være hurtig på aftrækkeren, når der quizzes i kategorier, som I selv vælger!
+                    </h1>
+                </div>
+            </ion-slide>
+            <ion-slide class="slide">
+                <div class="slide-content">
+                    <img class="slide-icon" src="./img/icons/choose-question.png">
+                    <h1>Man skiftes til at læse spørgsmål op.</h1>
+                    <ul>
+                      <h2>
+                        <li><b>1.</b> Som oplæser skal man ud over at læse op, også holde øje med hvem, der buzzer sig ind først.</li>
+                        <li><b>2.</b> Oplæseren skal stoppe med at læse op, så snart en person buzzer sig ind.</li>
+                        <li><b>3.</b> Oplæseren må først fortsætte, hvis personen svarer forkert.</li>
+                      </h2>
+                    </ul>
+                    <!-- <h2>Som oplæser skal man ud over at læse op, også holde øje med hvem, der buzzer sig ind først. Oplæseren skal stoppe med at læse op, så snart en person buzzer sig ind, og må først fortsætte, hvis personen svarer forkert.</h2> -->
+                </div>
+            </ion-slide>
+            <ion-slide class="slide">
+                <div class="slide-content">
+                    <img class="slide-icon" src="./img/icons/alert-smask.png">
+                    <h1>Man buzzer sig ind ved at slå i bordet og råbe “SMASK!”</h1>
+                    <ul>
+                      <h2>
+                        <li><b>4.</b> Når oplæseren har angivet hvem, der var hurtigst, må vedkommende komme med sit svar – <i>Svares der forkert må de andre deltagere buzze sig ind igen.</i></li>
+                        <li><b>5.</b> Personen der lige har svaret forkert må først buzze sig ind igen, hvis en anden deltager svarer forkert.</li>
+                      </h2>
+                    </ul>
+                </div>
+            </ion-slide>
+            <ion-slide class="slide">
+                <div class="slide-content">
+                    <img class="slide-icon" src="./img/icons/send-left.png">
+                    <h1>Der gives points & skiftes oplæser</h1>
+                    <ul>
+                      <h2>
+                        <li><b>6.</b> Oplæseren giver point, hvorefter telefonen sendes til venstre til den nye oplæser.</i>
+                        <li><b>7.</b> Personen, der netop har svaret rigtigt, vælger den næste kategori.</i>
+                        </li>
+                        <li>Dette fortsætter indtil alle spørgsmål i de valgte kategorier er besvaret. Vinderen er spilleren med flest point, selvfølgelig, KOM NU!
+                        </il>
+                    </ul>
+                </div>
+            </ion-slide>
+        </ion-slide-box>
+
+        <button class="button button-light button-clear skip-button animated slideInUp" ui-sref="app.collections">Skip</button>
+        <button class="button button-light button-clear skip-button animated slideInUp" ui-sref="app.collections" ng-if="">Skip</button>
+      </div>
+    </ion-content>
+</ion-view>

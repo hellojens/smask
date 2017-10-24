@@ -1,0 +1,51 @@
+<ion-modal-view class="player-modal ion-nifty-modal">
+  <div class="ion-modal-content-custom">
+    <ion-header-bar class="bar-dark">
+      <!-- <div class="buttons">
+        <button class="button button-icon icon ion-ios-minus-outline"
+          ng-click="data.showDelete = !data.showDelete; data.showReorder = false"></button>
+      </div> -->
+      <h1 class="title">Spiller oversigt</h1>
+      <div class="buttons">
+        <button class="button button-reorder" ng-click="data.showDelete = false; data.showReorder = !data.showReorder">
+          <img ng-src="./img/icons/reorder.png">
+        </button>
+      </div>
+    </ion-header-bar>
+    <ion-content class="playerList padding">
+      <ion-list class="listlist-dark" show-delete="data.showDelete" show-reorder="data.showReorder">
+        <ion-item class="item item-dark" ng-repeat="player in players" item="player" class="item-remove-animate">
+          <div class="playerNumber">
+            Spiller {{($index +1)}}
+          </div>
+          <div class="playerName">
+            {{player.name}}
+          </div>
+          <span class="item-note">
+           {{player.totalWins}} Wins
+          </span>
+          <ion-delete-button class="ion-minus-circled" ng-click="remove(player)">
+          </ion-delete-button>
+          <ion-option-button class="button-dark" ng-click="remove(player)">
+            <i class="icon ion-trash-a"></i> Slet
+          </ion-option-button>
+          <ion-option-button class="button-dark" ng-click="resetPlayer(player)">
+            <i class="icon ion-android-refresh"></i> Nulstil
+          </ion-option-button>
+          <ion-reorder-button class="icon-dark ion-navicon" on-reorder="moveItem(player, $fromIndex, $toIndex)"></ion-reorder-button>
+        </ion-item>
+      </ion-list>
+      <div class="list list-dark">
+        <div class="item item-dark item-input-inset">
+          <label class="item-input-wrapper">
+            <input type="text" ng-model="newPlayerName" placeholder="Tilføj ny spiller">
+          </label>
+          <button class="button button-small" ng-click="addNewPlayer(newPlayerName); newPlayerName = ''">
+            Tilføj
+          </button>
+        </div>
+      </div>
+      <button class="button button-full button-assertive" ng-click="startGame(selectedCategories); modal.hide()">Start Spil</button>
+    </ion-content>
+  </div>
+</ion-modal-view>

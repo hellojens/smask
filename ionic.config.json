@@ -1,0 +1,13 @@
+{
+  "name": "smask",
+  "app_id": "b8cc7215",
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*",
+    "!www/**/*.map"
+  ]
+}

@@ -1,0 +1,22 @@
+<ion-view view-title="{{categories.name}}">
+  <ion-content class="categories">
+    <div class="top-section">
+      <h1 class="padding"><img width="35" class="categoryIcon" ng-src="{{categories.icon}}"> {{categories.name}}</h1>
+      <p class="welcome-message padding">
+        {{categories.description}}
+      </p>
+    </div>
+    <div class="list categoriesList">
+      <div class="item item-dark item-thumbnail-left" ng-repeat="category in categories.included_categories track by $index">
+        <img ng-src="{{category.cover_image}}">
+        <h2>{{category.categoryTitle}}</h2>
+        <p>{{category.description}}</p>
+        <div class="selectBox plus" ng-click="selectCategorie(category)">
+        </div>
+        <div class="selectBox checked" ng-show="categories.id == category.id" ng-repeat="categories in selectedCategories">
+        </div>
+      </div>
+
+    </div>
+  </ion-content>
+</ion-view>
