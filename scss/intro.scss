@@ -291,7 +291,10 @@
       background-size: cover;
       // text-align: center;
       font-family: "Roboto", "Roboto", "Segoe UI", sans-serif !important;
+      p {
+        font-family: "Roboto", "Roboto", "Segoe UI", sans-serif !important;
 
+      }
       h1, h2,.slider-pager-page{
           color: $light;
       }
@@ -318,6 +321,8 @@
       ul {
         li {
           margin-bottom: 10px;
+          font-family: "Roboto", "Roboto", "Segoe UI", sans-serif !important;
+
           b {
             font-weight: 900;
             font-size: 21px;
@@ -349,6 +354,8 @@
           transform: translate(-50%, -50%);
           width: calc(100% - 50px);
           transition: all 0.3s ease-in;
+          font-family: "Roboto", "Roboto", "Segoe UI", sans-serif !important;
+
       }
 
       .slider-pager {
@@ -366,7 +373,16 @@
               bottom: 20px;
               right: 25px;
               color: rgba(255, 255, 255, 0.38) !important;
+              font-weight: bold;
       }
+
+      .playNow {
+        font-weight: 900;
+        color: #fff;
+        font-family: "Roboto", "Roboto", "Segoe UI", sans-serif !important;
+        font-size: 18px;
+      }
+
 
   }
 

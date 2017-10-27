@@ -1,7 +1,10 @@
 
 
 .welcome {
-  padding-top: 70px !important;
+  padding-top: 75px !important;
+  padding-bottom: 0;
+  height: 100%;
+  position: relative;
   .smask-logo {
     width: 48%;
     margin-left: 20px;
@@ -9,8 +12,22 @@
     top: -8px;
   }
 }
+.loadingSpinner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  img {
+    position: relative;
+    width: 50px;
+  }
+}
 .wowbg {
-  background: -webkit-linear-gradient(top, #fc5a5a 0%, #c9694b 100%) !important;
+  background: -webkit-linear-gr´adient(top, #fc5a5a 0%, #c9694b 100%) !important;
 }
 .top-section {
   padding: 15px;
@@ -185,7 +202,8 @@
     margin: 0px;
     white-space: nowrap;
     // min-width: 145px !important;
-    // width: auto !important; 
+    // width: auto !important;
+    // min-width: 160px;
     margin-bottom: 10px;
     &.first {
       width: 86px !important;
@@ -197,15 +215,17 @@
         border-radius: 100%;
         width: 60px;
         height: 60px;
+        text-align: center;
+        padding-top: 10px;
         // background-color: $primary;
         background-size: cover;
         // box-shadow: 0 0 7px rgba(0,0,0,0.3);
         .theIcon {
           // width: 80px;
           width: 60px;
-          /* padding: 8px; */
-          filter: invert(100%);
-          opacity: 0.7;
+          // padding: 8px;
+          // filter: invert(100%);
+          // opacity: 0.7;
         }
       }
       .collection-headline {
@@ -239,7 +259,7 @@
       }
       .categoryImage {
         // box-shadow: 0 0 7px rgba(0,0,0,0);
-        background-color: #fff;
+        // background-color: #fff;
         .overlay {
           h3 {
             font-size: 13px;
@@ -309,7 +329,6 @@
     }
     .categoryContent {
       text-shadow: 0 0 7px rgba(0,0,0,0.3);
-      // max-width: 130px;
       h5 {
         padding-top: 0;
         margin-bottom: 0;
@@ -636,7 +655,8 @@
   }
   .hint {
     font-style: italic;
-    color: #888;
+    color: rgba(255, 255, 255, 0.53);
+    margin-bottom: -20px;
   }
   .selectPlayerWin {
     padding: 2px;

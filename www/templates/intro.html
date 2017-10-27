@@ -4,12 +4,20 @@
         <!--top-->
         <img src="./img/logo.png" class="logo animated slideInDown">
         <!--slide-->
-        <ion-slide-box class="animated fadeIn">
+        <ion-slide-box on-slide-changed="introSlideChange($index)" class="animated fadeIn">
             <ion-slide class="slide">
                 <div class="slide-content">
+                  <br><br><br><br><br><br>
                     <h1>
-                      I SMASK skal man være hurtig på aftrækkeren, når der quizzes i kategorier, som I selv vælger!
+                      Velkommen til SMASK!
                     </h1>
+                    <p style="font-size: 16px;">
+                      Et sjovt og alsidigt spil, som du kan spille på forskelliger måde alt afhængigt af hvor du er, og hvem du er sammen med. 
+                      <br> <br>
+                      I kan quizze i paratviden, I kan lære mere om hinanden, og I kan på skift gøre jer selv til grin ved en række skøre og udfordrende lege.
+                      <br><br>
+                      - og hvis I vil, kan I blive helt smaskede.
+                    </p>
                 </div>
             </ion-slide>
             <ion-slide class="slide">
@@ -47,15 +55,20 @@
                         <li><b>6.</b> Oplæseren giver point, hvorefter telefonen sendes til venstre til den nye oplæser.</i>
                         <li><b>7.</b> Personen, der netop har svaret rigtigt, vælger den næste kategori.</i>
                         </li>
-                        <li>Dette fortsætter indtil alle spørgsmål i de valgte kategorier er besvaret. Vinderen er spilleren med flest point, selvfølgelig, KOM NU!
+                        <li>Dette fortsætter indtil alle spørgsmål er besvaret. Spilleren med flest points vinder, selvfølgelig, KOM NU!
                         </il>
                     </ul>
                 </div>
             </ion-slide>
         </ion-slide-box>
-
-        <button class="button button-light button-clear skip-button animated slideInUp" ui-sref="app.collections">Skip</button>
-        <button class="button button-light button-clear skip-button animated slideInUp" ui-sref="app.collections" ng-if="">Skip</button>
+        <button  class="button button-light button-clear skip-button animated slideInUp" ui-sref="app.collections">
+          <span ng-if="slideIndex != 3">
+            Skip
+          </span>
+          <span class="playNow" ng-if="slideIndex == 3">
+            Spil nu!
+          </span>
+        </button>
       </div>
     </ion-content>
 </ion-view>

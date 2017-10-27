@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-transitions', 'ngAnimate', 'toastr'])
 
-.controller('AppCtrl', function($scope, $http, $stateParams, $state, $ionicModal, $timeout, $http, $filter, $ionicSlideBoxDelegate, playerService, playThroughService, $ionicHistory, $ionicNativeTransitions, toastr, $ionicPlatform) {
+.controller('AppCtrl', function($scope, $http, $stateParams, $state, $ionicModal, $timeout, $http, $filter, $ionicSlideBoxDelegate, playerService, playThroughService, $ionicHistory, $ionicNativeTransitions, toastr, $ionicPlatform, $q) {
   $http.defaults.headers.common['Authorization'] = "Bearer " + 'keynHfCb7Qp6svdyV';
   $scope.baseUrl = 'https://api.airtable.com/v0/app04N9yQPQZLwC8T';
   $ionicNativeTransitions.enable(true);
@@ -94,6 +94,10 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
   $scope.gameStarted = false
 
+  $scope.updateCategoryProgress = function(category, progress) {
+    // playedSets.
+  }
+
   // Restart game
   $scope.startOver = function(players, index) {
     // Add Total Wins to winner
@@ -121,24 +125,26 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     //   $scope.playThroughValue += 1;
     // }
 
-    $scope.updatePlayerPoints = function (player, points) {
-      player.points = (player.points + points)
-      // $ionicHistory.goBack();
-    };
+    // $scope.updatePlayerPoints = function (player, points) {
+    //   console.log("update 1")
+    //   player.points = (player.points + points)
+    //   // $ionicHistory.goBack();
+    // };
 
     angular.forEach($scope.selectedCategories, function(eachCategory, index){
       eachCategory.played = false
       eachCategory.progress = eachCategory.progress += 1
 
-      // $scope.alreadyExist = _.findWhere(playThroughService.getAll(), {categoryId: eachCategory.categoryTitle});
-      // if($scope.alreadyExist == undefined) {
-      //   playThroughService.add({
-      //     categoryId: eachCategory.categoryTitle,
-      //     progress: eachCategory.progress
-      //   });
-      // } else {
-      //   console.log(playedSets.progress)
-      // }
+      $scope.alreadyExist = _.findWhere(playThroughService.getAll(), {categoryId: eachCategory.categoryTitle});
+      if($scope.alreadyExist == undefined) {
+        playThroughService.add({
+          categoryId: eachCategory.categoryTitle,
+          progress: eachCategory.progress
+        });
+      } else {
+        console.log(playedSets)
+        console.log("Already thehere ")
+      }
 
 
     });
@@ -152,10 +158,6 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   // Play again button on scoreBoard
   $scope.plagAgain = function() {
     $state.go('app.collections',{cache: false})
-    // $ionicNativeTransitions.stateGo('app.collections', {}, {}, {
-    //     "type": "slide",
-    //     "direction": "left", // 'left|right|up|down', default 'left' (which is like 'next')
-    // });
   }
 
   // Score Board Modal
@@ -211,7 +213,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
           $scope.whoStarts = _.sample($scope.players)
         } else {
           console.log("not - -- SAME SHIT")
-          $scope.whoStarts = $scope.shufflePlayers.name
+          $scope.whoStarts = $scope.shufflePlayers
         }
       }
       toastr.info('<b>' + $scope.shufflePlayers.name + '</b> starter som oplæser, og skal have telefonen.', {
@@ -232,87 +234,17 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
 .controller('IntroCtrl', ['$scope', '$state', '$timeout', '$ionicSlideBoxDelegate', '$ionicGesture', '$ionicModal', function($scope, $state, $timeout, $ionicSlideBoxDelegate, $ionicGesture, $ionicModal){
 
-
-  // for default isLastSlide value to set to false
-  $scope.$on("$ionicView.enter", function(event, data){
-     // handle event
-    $scope.firstSlide = true; // for screen 7
-     $scope.isLastSlide = false; // for screen 8
-  });
-
-  $scope.cardDestroyed = function(index) {
-    $scope.cards.active.splice(index, 1);
+  $scope.introSlideChange = function(index) {
+    $scope.slideIndex = index;
   };
-
-  $scope.addCard = function() {
-    var newCard = cardTypes[0];
-    $scope.cards.active.push(angular.extend({}, newCard));
-  }
-
-  $scope.refreshCards = function() {
-    // Set $scope.cards to null so that directive reloads
-    $scope.cards.active = null;
-    $timeout(function() {
-      $scope.cards.active = Array.prototype.slice.call($scope.cards.master, 0);
-
-    });
-  }
-
-  $scope.$on('removeCard', function(event, element, card) {
-    var discarded = $scope.cards.master.splice($scope.cards.master.indexOf(card), 1);
-    console.log(card);
-    $scope.cards.discards.push(discarded);
-  });
-
-  $scope.cardSwipedLeft = function(index) {
-    console.log('LEFT SWIPE');
-    var card = $scope.cards.active[index];
-    console.log(card);
-    //$scope.cards.disliked.push(card);
-  };
-  $scope.cardSwipedRight = function(index) {
-    console.log('RIGHT SWIPE');
-    var card = $scope.cards.active[index];
-     console.log(card);
-    //$scope.cards.liked.push(card);
-  };
-
-  $scope.refreshAndGo = function(){
-    $state.go('app');
-    $scope.refreshCards();
-  }
-
-  $scope.options = {
-    loop: true,
-    effect: 'fade',
-    speed: 200,
-  }
-
-  $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
-    // data.slider is the instance of Swiper
-    $scope.slider = data.slider;
-  });
-
-  $scope.$on("$ionicSlides.slideChangeStart", function(event, data){
-    console.log('Slide change is beginning');
-  });
-
-  $scope.$on("$ionicSlides.slideChangeEnd", function(event, data){
-    // note: the indexes are 0-based
-    $scope.activeIndex = data.activeIndex;
-    $scope.previousIndex = data.previousIndex;
-  });
-  var slide = angular.element(document.querySelector('#slide'));
-
 
 }])
 
-.controller('CollectionsCtrl', function($scope, $timeout, $ionicSlideBoxDelegate, $http, $stateParams, $state, $ionicHistory, playThroughService) {
+.controller('CollectionsCtrl', function($scope, $timeout, $ionicSlideBoxDelegate, $http, $stateParams, $state, $ionicHistory, playThroughService, $q) {
   $scope.displaySlider = true
 
   $scope.groups = []
-  $scope.collections = []
-  $scope.collectionsReady = true
+  $scope.collectionsReady = false
 
   $http.get($scope.baseUrl + '/groups' + '?&view=Grid%20view'
   ).then( function(groups) {
@@ -321,79 +253,179 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
         name: data.fields.Name,
         description: data.fields.description,
         color: data.fields.color,
-        included_collections: []
+        included_collections: data.fields.inclueded_collections_id,
       })
-      angular.forEach(data.fields.collection_id, function(data, collectionsIndex){
-        $http.get($scope.baseUrl + '/collections' + '?&filterByFormula=(id="'+ data +'")&view=Grid%20view'
+    })
+  }).finally(function() {
+    $scope.loadingCollections = true
+    $scope.collections = []
+    $scope.categories = []
+
+    var itemsProcessed = 0;
+
+    angular.forEach($scope.groups, function(g) {
+      angular.forEach(g.included_collections, function(included_ids, indsssI, array) {
+        $http.get($scope.baseUrl + '/collections' + '?&filterByFormula=(id="'+ included_ids +'")&view=Grid%20view'
         ).then( function(collections) {
-          angular.forEach(collections.data.records, function(data){
-            // Collection Start Random Bacground Color
-            $scope.randomColor = Math.floor(Math.random()*16777215).toString(16);
-            $scope.groups[groupsIndex].included_collections.push({
+          angular.forEach(collections.data.records, function(data, collectionIndex){
+            if(data.fields.hasOwnProperty('icon')) {
+              var validCollecionIconUrl = data.fields.icon[0].thumbnails.large.url
+            } else {
+              var validCollecionIconUrl = ''
+            }
+            $scope.collections.push({
               id: data.id,
               name: data.fields.Name,
               description: data.fields.description,
-              icon: data.fields.icon[0].url,
-              randomColor: $scope.randomColor,
-              included_categories: []
+              icon: validCollecionIconUrl,
+              included_categories: data.fields.included_categories
             })
-            angular.forEach(data.fields.included_categories, function(data,i){
-              $http.get($scope.baseUrl + '/categories' + '?&filterByFormula=(categorie_id="'+ data +'")&view=Grid%20view'
-              ).then( function(resp) {
-                // $scope.categoryData = resp.data.records[0].fields
-                $scope.categoryDataSets = resp.data.records[0].fields.Sets
-
-                // $scope.findProgress = _.findWhere(playThroughService.getAll(), {categoryId: resp.data.records[0].fields.Name});
-                // if($scope.findProgress == undefined) {
-                //   $scope.getProgress = 0
-                // } else {
-                //   $scope.getProgress = $scope.findProgress.progress
-                // }
-                console.log(resp.data.records[0].fields)
-                $scope.groups[groupsIndex].included_collections[collectionsIndex].included_categories.push({
-                  id: $scope.categoryDataSets,
-                  categoryTitle: resp.data.records[0].fields.Name,
-                  description: resp.data.records[0].fields.description,
-                  cover_image: resp.data.records[0].fields.cover_image[0].thumbnails.large.url,
-                  icon: resp.data.records[0].fields.icon[0].thumbnails.small.url,
-                  progress: 0
-                });
-                $scope.collectionsReady = true
-              })
-            });
-          });
-        });
-      });
-      console.log($scope.groups)
-    });
-    // ionic Sliders
-    $scope.sliderDelegate = null
-    $scope.collectionsSliderSettings = {
-      slidesPerView: 2,
-      slidesToShow: 2,
-      centeredSlides: false,
-      pagination: false,
-      spaceBetween: 10,
-      initialSlide: 0,
-      slidesOffsetAfter: 20,
-      slidesOffsetBefore: 20,
-    }
-    $scope.collectionsSliderSettingsOnlyOne = {
-      slidesPerView: 1,
-      slidesToShow: 2,
-      draggable: false,
-      touchMove: false,
-      centeredSlides: true,
-      pagination: false,
-      spaceBetween: 10,
-      initialSlide: 0,
-      slidesOffsetAfter: 20,
-      slidesOffsetBefore: 20
-    }
-    $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
-      $scope.slider = data.slider;
+          })
+        }).finally(function() {
+          itemsProcessed++;
+          if(itemsProcessed === array.length) {
+            $scope.getCategories($scope.collections)
+          }
+        })
+      })
     });
 
+    $scope.getCategories = function(collectionsData) {
+      $http.get($scope.baseUrl + '/categories').then( function(resp) {
+        angular.forEach(resp.data.records, function(data, i, array2) {
+          if(data.fields.hasOwnProperty('Name')) {
+            if(data.fields.hasOwnProperty('cover_image')) {
+              var validCoverImage = data.fields.cover_image[0].thumbnails.large.url
+            } else {
+              var validCoverImage = ''
+            }
+            if(data.fields.hasOwnProperty('icon')) {
+              var validIconUrl = data.fields.icon[0].thumbnails.small.url
+            } else {
+              var validIconUrl = ''
+            }
+            $scope.categoryDataSets = data.fields.Sets
+            $scope.categories.push({
+              publishedAt: data.createdTime,
+              id: $scope.categoryDataSets,
+              collectionId: data.fields.collection_id,
+              categoryTitle: data.fields.Name,
+              description: data.fields.description,
+              cover_image: validCoverImage,
+              icon: validIconUrl,
+              progress: 0
+            })
+          }
+        })
+      }).finally(function() {
+        $timeout(function() {
+          $scope.collectionsReady = true
+        }, 1000);
+      })
+    }
+
+
+
+
+
+    // angular.forEach($scope.collections, function(data,i){
+    //   console.log(data)
+    //
+    //   $http.get($scope.baseUrl + '/categories' + '?&filterByFormula=(categorie_id="'+ data.id +'")&view=Grid%20view'
+    //   ).then( function(resp) {
+    //
+    //     $scope.categoryDataSets = resp.data.records[0].fields.Sets
+    //
+    //     console.log(resp.data.records[0].fields)
+    //     $scope.groups[groupsIndex].included_collections[collectionsIndex].included_categories.push({
+    //       id: $scope.categoryDataSets,
+    //       categoryTitle: resp.data.records[0].fields.Name,
+    //       description: resp.data.records[0].fields.description,
+    //       cover_image: resp.data.records[0].fields.cover_image[0].thumbnails.large.url,
+    //       icon: resp.data.records[0].fields.icon[0].thumbnails.small.url,
+    //       progress: 0
+    //     });
+    //     $scope.collectionsReady = true
+    //   })
+    // });
+
+    // var allGroups = $scope.groups
+    // angular.forEach(allGroups, function(data2, collectionsIndex){
+    //
+    //   console.log(collectionsIndex)
+    //   angular.forEach(groups, function(inclId){
+    //
+    //     console.log(inclId)
+    //     $http.get($scope.baseUrl + '/collections' + '?&filterByFormula=(id="'+ data.id +'")&view=Grid%20view'
+    //     ).then( function(collections) {
+    //       angular.forEach(collections.data.records, function(data){
+    //         // Collection Start Random Bacground Color
+    //         $scope.randomColor = Math.floor(Math.random()*16777215).toString(16);
+    //         $scope.groups[groupsIndex].included_collections.push({
+    //           id: data.id,
+    //           name: data.fields.Name,
+    //           description: data.fields.description,
+    //           icon: data.fields.icon[0].url,
+    //           randomColor: $scope.randomColor,
+    //           included_categories: []
+    //         })
+    //         angular.forEach(data.fields.included_categories, function(data,i){
+    //           $http.get($scope.baseUrl + '/categories' + '?&filterByFormula=(categorie_id="'+ data +'")&view=Grid%20view'
+    //           ).then( function(resp) {
+    //             // $scope.categoryData = resp.data.records[0].fields
+    //             $scope.categoryDataSets = resp.data.records[0].fields.Sets
+    //
+    //             // $scope.findProgress = _.findWhere(playThroughService.getAll(), {categoryId: resp.data.records[0].fields.Name});
+    //             // if($scope.findProgress == undefined) {
+    //             //   $scope.getProgress = 0
+    //             // } else {
+    //             //   $scope.getProgress = $scope.findProgress.progress
+    //             // }
+    //             console.log(resp.data.records[0].fields)
+    //             $scope.groups[groupsIndex].included_collections[collectionsIndex].included_categories.push({
+    //               id: $scope.categoryDataSets,
+    //               categoryTitle: resp.data.records[0].fields.Name,
+    //               description: resp.data.records[0].fields.description,
+    //               cover_image: resp.data.records[0].fields.cover_image[0].thumbnails.large.url,
+    //               icon: resp.data.records[0].fields.icon[0].thumbnails.small.url,
+    //               progress: 0
+    //             });
+    //             $scope.collectionsReady = true
+    //           })
+    //         });
+    //       });
+    //     });
+    //   });
+    // });
+
+  })
+
+  // ionic Sliders
+  $scope.sliderDelegate = null
+  $scope.collectionsSliderSettings = {
+    slidesPerView: 2,
+    slidesToShow: 2,
+    centeredSlides: false,
+    pagination: false,
+    spaceBetween: 10,
+    initialSlide: 0,
+    slidesOffsetAfter: 20,
+    slidesOffsetBefore: 20,
+  }
+  $scope.collectionsSliderSettingsOnlyOne = {
+    slidesPerView: 1,
+    slidesToShow: 2,
+    draggable: false,
+    touchMove: false,
+    centeredSlides: true,
+    pagination: false,
+    spaceBetween: 10,
+    initialSlide: 0,
+    slidesOffsetAfter: 20,
+    slidesOffsetBefore: 20
+  }
+  $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
+    $scope.slider = data.slider;
   });
 
   $scope.selectCollection = function (selectedCollectionData) {
