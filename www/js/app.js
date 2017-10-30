@@ -15,7 +15,7 @@ angular.module('starter', [
   'underscore',
   'ionic-native-transitions',
   'ngAnimate',
-  'toastr'
+  'toastr',
 ])
 .run(function($ionicPlatform, $state, $rootScope) {
   $rootScope.$state = $state;
@@ -125,12 +125,22 @@ angular.module('starter', [
       "app_id": "2b66832a"
     }
   })
+
   $stateProvider
   .state('app', {
     url: '/app',
     abstract: true,
     templateUrl: 'templates/menu.html',
     controller: 'AppCtrl'
+  })
+  .state('app.iap', {
+    url: '/iap',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/iap-test.html',
+        controller: 'AppCtrl'
+      }
+    }
   })
   .state('app.intro', {
     url: '/intro',
@@ -140,7 +150,6 @@ angular.module('starter', [
         controller: 'IntroCtrl'
       }
     }
-
   })
   .state('app.collections', {
     url: '/collections',

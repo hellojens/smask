@@ -506,6 +506,33 @@ svg {
     .collectionsList .slide-content .swiper-container {
       width: 100%;
       overflow: visible; }
+  .collectionsList .lockedCollection .collectionsItem {
+    pointer-events: none;
+    opacity: 0.4; }
+    .collectionsList .lockedCollection .collectionsItem.first {
+      opacity: 1;
+      pointer-events: auto; }
+      .collectionsList .lockedCollection .collectionsItem.first .categoryImage {
+        background: #FC5B5A; }
+        .collectionsList .lockedCollection .collectionsItem.first .categoryImage .overlay h3 {
+          font-size: 11px;
+          position: relative;
+          top: 33px;
+          display: block; }
+      .collectionsList .lockedCollection .collectionsItem.first .collectionIcon {
+        position: absolute;
+        top: 2px;
+        left: 18px;
+        padding: 8px;
+        width: 50px;
+        height: 50px;
+        padding-top: 10px; }
+        .collectionsList .lockedCollection .collectionsItem.first .collectionIcon .theIcon {
+          width: 50px; }
+  .collectionsList .unLockedCollection .collectionsItem {
+    pointer-events: auto; }
+    .collectionsList .unLockedCollection .collectionsItem.first .categoryImage {
+      background: green; }
   .collectionsList .collectionsItem {
     position: relative;
     margin: 0px;

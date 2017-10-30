@@ -1,0 +1,24 @@
+<ion-view view-title="IAP TEST" hide-nav-bar="true">
+  <ion-content class="padding">
+
+    <h3>Products</h3>
+    <button ng-show="!products" ng-click="loadProducts()" class="button button-block button-balanced">
+      <i class="ion-arrow-down-c"></i> Load Products
+    </button>
+    <button ng-repeat="product in products" ng-click="buy(product.productId)" class="button button-block button-positive">
+      {{product.title}} - {{product.price}}
+    </button>
+    <h3>Restore Purchases</h3>
+    <button ng-click="restore()" class="button button-block button-balanced">
+      <i class="ion-refresh"></i> Restore
+    </button>
+    <div ng-repeat="purchases in restoreList">
+      ""{{purchases}}""
+      <b>"productID:" {{purchases.productId}}</b>
+      <button ng-repeat="product in products | filter: {productId: purchases.productId}" ng-click="buy(product.productId)" class="button button-block button-balanced">
+        {{product.title}} - {{product.price}}
+      </button>
+    <div>
+  </ion-content>
+  <!-- </div> -->
+</ion-view>

@@ -197,6 +197,49 @@
       overflow: visible;
     }
   }
+  .lockedCollection {
+    .collectionsItem {
+      pointer-events: none;
+      opacity: 0.4;
+      &.first {
+        opacity: 1;
+        pointer-events: auto;
+        .categoryImage {
+          background: $primary;
+          .overlay {
+            h3 {
+              font-size: 11px;
+              position: relative;
+              top: 33px;
+              display: block;
+            }
+          }
+        }
+        .collectionIcon {
+          position: absolute;
+          top: 2px;
+          left: 18px;
+          padding: 8px;
+          width: 50px;
+          height: 50px;
+          padding-top: 10px;
+          .theIcon {
+            width: 50px;
+          }
+        }
+      }
+    }
+  }
+  .unLockedCollection {
+    .collectionsItem {
+      pointer-events: auto;
+      &.first {
+        .categoryImage {
+          background: green;
+        }
+      }
+    }
+  }
   .collectionsItem {
     position: relative;
     margin: 0px;

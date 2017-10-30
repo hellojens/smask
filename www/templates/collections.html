@@ -13,20 +13,25 @@
 
         <div class="collectionsList animated fadeIn">
           <div ng-repeat="groupCollectionIds in group.included_collections track by $index">
-            <div ng-repeat="collection in collections | filter: {id: groupCollectionIds} track by $index " >
+            <div ng-repeat="collection in collections | filter: {id: groupCollectionIds} track by $index" ng-class="{'lockedCollection' : productList.indexOf(collection.iapId) !== -1, 'unLockedCollection' : restoreCollectionList.indexOf(collection.iapId) !== -1}">
               <h3 class="collectionName">{{collection.name}}</h3>
               <div class="slide-content">
                 <ion-slides options="collectionsSliderSettings" slider="data.slider">
                   <!-- Collection Start  -->
                   <ion-slide-page class="collectionsItem first">
-                    <div class="categoryImage">
+                    <div class="categoryImage" ng-click="buy(collection.iapId)">
                       <div class="overlay">
                         <div class="collectionIcon">
                           <img class="theIcon" ng-src="{{collection.icon}}">
                         </div>
-                        <!-- <h3 class="collection-headline">
-                          {{ collection.name }}
-                        </h3> -->
+                        <h3 class="collection-headline"
+                          ng-if="productList.indexOf(collection.iapId) !== -1">
+                          Køb dette sæt
+                        </h3>
+                        <h3 class="collection-headline"
+                          ng-if="restoreCollectionList.indexOf(collection.iapId) !== -1">
+                          Tilkøbt sæt
+                        </h3>
                       </div>
                     </div>
                   </ion-slide-page>
