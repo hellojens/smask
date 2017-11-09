@@ -7,31 +7,6 @@ var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
 var request = require("request");
-var Airtable = require('airtable');
-//
-// var Airtable = require('airtable');
-// var base = new Airtable({apiKey: 'keynHfCb7Qp6svdyV'}).base('appTx7vqrCf4GgwVw');
-//
-// base('Categories').select({
-//     // Selecting the first 3 records in Main View:
-//     maxRecords: 3,
-//     view: "Main View"
-// }).eachPage(function page(records, fetchNextPage) {
-//     // This function (`page`) will get called for each page of records.
-//
-//     records.forEach(function(record) {
-//         console.log('Retrieved', record.get('Name'));
-//     });
-//
-//     // To fetch the next page of records, call `fetchNextPage`.
-//     // If there are more records, `page` will get called again.
-//     // If there are no more records, `done` will get called.
-//     fetchNextPage();
-//
-// }, function done(err) {
-//     if (err) { console.error(err); return; }
-// });
-
 var paths = {
   sass: ['./scss/**/*.scss']
 };

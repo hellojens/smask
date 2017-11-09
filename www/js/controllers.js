@@ -42,27 +42,23 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   };
 
   $scope.loadProducts = function () {
-    $ionicLoading.show({ template: spinner + 'Loading Products...' });
     inAppPurchase
       .getProducts(productIds)
       .then(function (products) {
-        console.log(products)
-        $ionicLoading.hide();
+        console.log("procuts" + products)
         $scope.products = products;
-        $scope.restore()
       })
       .catch(function (err) {
-        $ionicLoading.hide();
         console.log(err);
       });
   };
-
   $scope.buy = function (productId) {
-    var stringifiedID = JSON.stringify(productId)
+    var productIdConverted =  "'" + productId + "'"
+    console.log(productIdConverted)
     if(window.cordova && productId != undefined) {
       $ionicLoading.show({ template: spinner + 'Purchasing...' });
       inAppPurchase
-        .buy(stringifiedID)
+        .buy('free_product')
         .then(function (data) {
           console.log(JSON.stringify(data));
           console.log('consuming transactionId: ' + data.transactionId);
@@ -87,96 +83,6 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
         });
     }
   };
-
-  $scope.groups = []
-  $scope.collectionsReady = false
-
-  $http.get($scope.baseUrl + '/groups' + '?&view=Grid%20view'
-  ).then( function(groups) {
-    angular.forEach(groups.data.records, function(data, groupsIndex){
-      $scope.groups.push({
-        name: data.fields.Name,
-        description: data.fields.description,
-        color: data.fields.color,
-        included_collections: data.fields.inclueded_collections_id,
-      })
-    })
-  }).finally(function() {
-    $scope.loadingCollections = true
-    $scope.collections = []
-    $scope.categories = []
-
-    var itemsProcessed = 0;
-
-    angular.forEach($scope.groups, function(g) {
-      angular.forEach(g.included_collections, function(included_ids, indsssI, array) {
-        $http.get($scope.baseUrl + '/collections' + '?&filterByFormula=(id="'+ included_ids +'")&view=Grid%20view'
-        ).then( function(collections) {
-          angular.forEach(collections.data.records, function(data, collectionIndex){
-            if(data.fields.hasOwnProperty('icon')) {
-              var validCollecionIconUrl = data.fields.icon[0].thumbnails.large.url
-            } else {
-              var validCollecionIconUrl = ''
-            }
-            $scope.collections.push({
-              id: data.id,
-              name: data.fields.Name,
-              description: data.fields.description,
-              icon: validCollecionIconUrl,
-              included_categories: data.fields.included_categories,
-              isLocked: data.fields.locked,
-              iapId: data.fields.iap_id
-            })
-          })
-        }).finally(function() {
-          itemsProcessed++;
-          if(itemsProcessed === array.length) {
-            $scope.getCategories($scope.collections)
-            // Check if user already purchased a collection
-            if (window.cordova) {
-              $scope.loadProducts()
-              $scope.restoreCollections()
-            }
-          }
-        })
-      })
-    });
-
-    $scope.getCategories = function(collectionsData) {
-      $http.get($scope.baseUrl + '/categories').then( function(resp) {
-        angular.forEach(resp.data.records, function(data, i, array2) {
-          if(data.fields.hasOwnProperty('Name')) {
-            if(data.fields.hasOwnProperty('cover_image')) {
-              var validCoverImage = data.fields.cover_image[0].thumbnails.large.url
-            } else {
-              var validCoverImage = ''
-            }
-            if(data.fields.hasOwnProperty('icon')) {
-              var validIconUrl = data.fields.icon[0].thumbnails.small.url
-            } else {
-              var validIconUrl = ''
-            }
-            $scope.categoryDataSets = data.fields.Sets
-            $scope.categories.push({
-              publishedAt: data.createdTime,
-              id: $scope.categoryDataSets,
-              collectionId: data.fields.collection_id,
-              categoryTitle: data.fields.Name,
-              description: data.fields.description,
-              cover_image: validCoverImage,
-              icon: validIconUrl,
-              progress: 0
-            })
-          }
-        })
-      }).finally(function() {
-        $timeout(function() {
-          $scope.collectionsReady = true
-        }, 1000);
-      })
-    }
-
-  });
 
 
   $scope.closeModal = function() {
@@ -417,7 +323,95 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 .controller('CollectionsCtrl', function($scope, $timeout, $ionicSlideBoxDelegate, $http, $stateParams, $state, $ionicHistory, playThroughService, $q) {
   $scope.displaySlider = true
 
+  $scope.groups = []
+  $scope.collectionsReady = false
 
+  $http.get($scope.baseUrl + '/groups' + '?&view=Grid%20view'
+  ).then( function(groups) {
+    angular.forEach(groups.data.records, function(data, groupsIndex){
+      $scope.groups.push({
+        name: data.fields.Name,
+        description: data.fields.description,
+        color: data.fields.color,
+        included_collections: data.fields.inclueded_collections_id,
+      })
+    })
+  }).finally(function() {
+    $scope.loadingCollections = true
+    $scope.collections = []
+    $scope.categories = []
+
+    var itemsProcessed = 0;
+
+    angular.forEach($scope.groups, function(g) {
+      angular.forEach(g.included_collections, function(included_ids, indsssI, array) {
+        $http.get($scope.baseUrl + '/collections' + '?&filterByFormula=(id="'+ included_ids +'")&view=Grid%20view'
+        ).then( function(collections) {
+          angular.forEach(collections.data.records, function(data, collectionIndex){
+            if(data.fields.hasOwnProperty('icon')) {
+              var validCollecionIconUrl = data.fields.icon[0].thumbnails.large.url
+            } else {
+              var validCollecionIconUrl = ''
+            }
+            $scope.collections.push({
+              id: data.id,
+              name: data.fields.Name,
+              description: data.fields.description,
+              icon: validCollecionIconUrl,
+              included_categories: data.fields.included_categories,
+              isLocked: data.fields.locked,
+              iapId: data.fields.iap_id
+            })
+          })
+        }).finally(function() {
+          itemsProcessed++;
+          if(itemsProcessed === array.length) {
+            $scope.getCategories($scope.collections)
+            // Check if user already purchased a collection
+            if (window.cordova) {
+              // $scope.loadProducts()
+              $scope.restoreCollections()
+            }
+          }
+        })
+      })
+    });
+
+    $scope.getCategories = function(collectionsData) {
+      $http.get($scope.baseUrl + '/categories').then( function(resp) {
+        angular.forEach(resp.data.records, function(data, i, array2) {
+          if(data.fields.hasOwnProperty('Name')) {
+            if(data.fields.hasOwnProperty('cover_image')) {
+              var validCoverImage = data.fields.cover_image[0].thumbnails.large.url
+            } else {
+              var validCoverImage = ''
+            }
+            if(data.fields.hasOwnProperty('icon')) {
+              var validIconUrl = data.fields.icon[0].thumbnails.small.url
+            } else {
+              var validIconUrl = ''
+            }
+            $scope.categoryDataSets = data.fields.Sets
+            $scope.categories.push({
+              publishedAt: data.createdTime,
+              id: $scope.categoryDataSets,
+              collectionId: data.fields.collection_id,
+              categoryTitle: data.fields.Name,
+              description: data.fields.description,
+              cover_image: validCoverImage,
+              icon: validIconUrl,
+              progress: 0
+            })
+          }
+        })
+      }).finally(function() {
+        $timeout(function() {
+          $scope.collectionsReady = true
+        }, 1000);
+      })
+    }
+
+  });
 
 
 
@@ -539,11 +533,16 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
 })
 
-.controller('GameBoardCtrl', function($scope, $http, $timeout, $state, $stateParams, $ionicHistory, playThroughService, toastr) {
+.controller('GameBoardCtrl', function($scope, $http, $timeout, $state, $stateParams, $ionicHistory, playThroughService, toastr, fetchAllQustions) {
 
   $scope.setRecordData = $state.params.startGameData
   $scope.selectedGameboard = []
   $scope.questionsLoaded = false
+
+
+  fetchAllQustions.getAll().then(function(data) {
+    console.log('getAll',data);
+  })
 
   angular.forEach($scope.setRecordData, function(recordData, index){
 

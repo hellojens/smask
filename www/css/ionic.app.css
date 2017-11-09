@@ -469,7 +469,7 @@ svg {
     color: #fff !important; }
 
 .groupsList {
-  padding: 20px 0 60px 0;
+  padding: 20px 0 20px 0;
   position: relative; }
   .groupsList .groupBackgroundColor {
     position: absolute;
@@ -512,13 +512,12 @@ svg {
     .collectionsList .lockedCollection .collectionsItem.first {
       opacity: 1;
       pointer-events: auto; }
-      .collectionsList .lockedCollection .collectionsItem.first .categoryImage {
-        background: #FC5B5A; }
-        .collectionsList .lockedCollection .collectionsItem.first .categoryImage .overlay h3 {
-          font-size: 11px;
-          position: relative;
-          top: 33px;
-          display: block; }
+      .collectionsList .lockedCollection .collectionsItem.first .categoryImage .overlay h3 {
+        color: #FC5B5A;
+        font-size: 11px;
+        position: relative;
+        top: 33px;
+        display: block; }
       .collectionsList .lockedCollection .collectionsItem.first .collectionIcon {
         position: absolute;
         top: 2px;

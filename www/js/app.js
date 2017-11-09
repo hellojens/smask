@@ -17,7 +17,7 @@ angular.module('starter', [
   'ngAnimate',
   'toastr',
 ])
-.run(function($ionicPlatform, $state, $rootScope) {
+.run(function($ionicPlatform, $state, $rootScope, $http) {
   $rootScope.$state = $state;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -34,6 +34,45 @@ angular.module('starter', [
     }
 
   });
+})
+.factory('fetchAllQustions', function($http){
+  function checkForQuestions() {
+    $http.defaults.headers.common['Authorization'] = "Bearer " + 'keynHfCb7Qp6svdyV';
+    var baseUrl = 'https://api.airtable.com/v0/app04N9yQPQZLwC8T';
+    var allQuestions = []
+    $http.get(baseUrl + '/questions' + '?&view=Grid%20view').then( function(resp) {
+      console.log(resp)
+      console.log(resp.data.offset)
+      console.log(resp.data.records.length)
+      var checkAgain = function(offsetId){
+        if(offsetId != undefined) {
+          $http.get(baseUrl + '/questions' + '?&view=Grid%20view' + '&offset=' + offsetId)
+          .then(function success(resp){
+            console.log(resp.data)
+            if(resp.data.offset == undefined) {
+              console.log("stop")
+              checkAgain();
+              Array.prototype.push.apply(allQuestions, resp.data.records);
+            }
+            if (resp.data.offset != null) {
+              checkAgain(resp.data.offset);
+              Array.prototype.push.apply(allQuestions, resp.data.records);
+            } else {
+              return allQuestions
+            }
+          })
+        }
+      }
+      if(resp.data.records.length == 100) {
+        checkAgain(resp.data.offset);
+      }
+    })
+  }
+  return {
+    getAll: function(){
+      return checkForQuestions
+    }
+  };
 })
 .factory('playerService', function ($localStorage) {
 

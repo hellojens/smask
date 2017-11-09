@@ -151,7 +151,7 @@
 }
 
 .groupsList {
-  padding: 20px 0 60px 0;
+  padding: 20px 0 20px 0;
   position: relative;
   .groupBackgroundColor {
     position: absolute;
@@ -205,9 +205,10 @@
         opacity: 1;
         pointer-events: auto;
         .categoryImage {
-          background: $primary;
+          // background: #;
           .overlay {
             h3 {
+              color: $primary;
               font-size: 11px;
               position: relative;
               top: 33px;

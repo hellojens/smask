@@ -6,6 +6,7 @@
       <i class="ion-arrow-down-c"></i> Load Products
     </button>
     <button ng-repeat="product in products" ng-click="buy(product.productId)" class="button button-block button-positive">
+      {{product}}
       {{product.title}} - {{product.price}}
     </button>
     <h3>Restore Purchases</h3>
