@@ -533,16 +533,16 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
 })
 
-.controller('GameBoardCtrl', function($scope, $http, $timeout, $state, $stateParams, $ionicHistory, playThroughService, toastr, fetchAllQustions) {
+.controller('GameBoardCtrl', function($scope, $http, $timeout, $state, $stateParams, $ionicHistory, playThroughService, toastr) {
 
   $scope.setRecordData = $state.params.startGameData
   $scope.selectedGameboard = []
   $scope.questionsLoaded = false
 
 
-  fetchAllQustions.getAll().then(function(data) {
-    console.log('getAll',data);
-  })
+  // fetchAllQustions.getAll().then(function(data) {
+  //   console.log('getAll',data);
+  // })
 
   angular.forEach($scope.setRecordData, function(recordData, index){
 
