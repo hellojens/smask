@@ -82,6 +82,7 @@
     	</div>
 
     	<div class="cd-modal-close cd-modal-close-now checkmark">Close</div>
+    	<div class="cd-modal-close cd-modal-close-now show-intro" ng-class="{'active': gameStarted == true}" ng-click="showIntroInGame()"></div>
     	<div class="cd-modal-close cd-modal-close-now start-over" ng-class="{'active': gameStarted == true}" ng-click="startOver(players)"></div>
     </section>
   </div>
@@ -108,7 +109,7 @@
     </ion-nav-bar>
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
-
+<!-- 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-stable">
       <h1 class="title">Menu</h1>
@@ -123,7 +124,7 @@
         </ion-item>
         <ion-item menu-close href="#/app/browse">
           Browse
-        </ion-item> -->
+        </ion-item> -
         <ion-item class="item item-dark" menu-close href="#/app/playlists">
           Start Game
         </ion-item>
@@ -136,4 +137,5 @@
       </ion-list>
     </ion-content>
   </ion-side-menu>
+-->
 </ion-side-menus>

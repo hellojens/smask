@@ -1,4 +1,4 @@
-<ion-view view-title="Game Board" hide-nav-bar="true" hide-back-button="true">
+<ion-view view-title="Game Board" hide-nav-bar="true" hide-back-button="true" can-swipe-back=“false”>
   <ion-content class="gameboard no-header">
     <div class="">
       <div class="gamelboardList" ng-if="questionsLoaded" ng-repeat="(key, value) in selectedGameboard | groupBy: 'name'">

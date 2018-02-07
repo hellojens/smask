@@ -1,25 +1,56 @@
-<ion-modal-view class="category-view ion-nifty-modal animated slideUp">
-  <div class="ion-modal-content-custom">
-    <ion-content class="category-view-content padding">
-      <div class="cover-image">
-        <img ng-src="{{categoryDetails.cover_image}}">
-      </div>
-      <h3>{{categoryDetails.categoryTitle}}</h3>
-      <p>{{categoryDetails.description}} </p>
-      <!-- <b>Progress: {{categoryDetails.progress}} </b> -->
-    </ion-content>
-    <div class="row modal-button-section">
-      <div class="col col-33">
-        <button class="button button-outline button-light button-block" ng-click="closeModal()">
-          Luk
-        </button>
-      </div>
-      <div class="col col-67">
-        <button class="button button-assertive button-block " ng-click="selectCategorie(categoryDetails); select(categoryDetails.id); closeModal()">
-          Tilføj
-          <!-- <img ng-src="../img/icons/checkmark.svg"> -->
-        </button>
-      </div>
-    </div>
-  </div>
+<ion-modal-view class="category-view-slider">
+  <ion-content scroll="false">
+    <h2>{{selectedCollection.name}}</h2>
+    <ion-slides options="categoryViewSliderOptions" slider="data.sliderDelegate2">
+      <ion-slide-page ng-repeat="category in categories | filter: {collectionId: selectedCollection.id} | orderBy: '-publishedAt' track by $index">
+        <ion-modal-view class="category-view ion-nifty-modal animated slideUp">
+          <div class="ion-modal-content-custom">
+            <ion-content class="category-view-content padding">
+              <div class="cover-image">
+                <img ng-src="{{category.cover_image}}">
+              </div>
+              <div class="collection-icon">
+                <img ng-src="{{selectedCollection.icon}}" alt="">
+              </div>
+              <h4>{{category.categoryTitle}}</h4>
+              <p>
+                {{category.description}}
+                <br>
+                <br>
+                <br>
+                <br>
+              </p>
+              <!-- <b>Progress: {{categoryDetails.progress}} </b> -->
+            </ion-content>
+            <div class="row modal-button-section">
+              <div class="col col-33">
+                <button class="button button-outline button-light button-block" ng-click="closeModal()">
+                  Luk
+                </button>
+              </div>
+              <div class="col col-67">
+                <button class="button button-assertive button-block " 
+                ng-click="selectCategorie(category); select(category.id); closeModal()"
+                ng-hide="selectedCollection.isLocked"
+                >
+                  Vælg
+                  <img ng-src="../img/icons/checkmark.svg">
+                </button>
+                <button class="button button-assertive button-unlock button-block " 
+                ng-click="selectCategorie(category); select(category.id); closeModal()"
+                ng-show="selectedCollection.isLocked"
+                >
+                  <img ng-src="./img/icons/un-lock.png">
+
+                <!-- {{category.name}} -->
+                  Køb {{selectedCollection.price}} Kr,-
+                </button>
+              </div>
+            </div>
+          </div>
+        </ion-modal-view>
+      </ion-slide-page>
+
+    </ion-slides>
+  </ion-content>
 </ion-modal-view>

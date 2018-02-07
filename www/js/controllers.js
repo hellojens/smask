@@ -1,25 +1,35 @@
-angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-transitions', 'ngAnimate', 'toastr'])
+angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-transitions', 'ngAnimate', 'toastr', 'ngCordova.plugins.nativeStorage'])
 
-.controller('AppCtrl', function($scope, $http, $stateParams, $state, $ionicModal, $timeout, $http, $filter, $ionicSlideBoxDelegate, playerService, playThroughService, $ionicHistory, $ionicNativeTransitions, toastr, $ionicPlatform, $q, $ionicLoading, $ionicPopup) {
+.controller('AppCtrl', function($ionicPlatform, $scope, $cordovaNativeStorage, $http, $stateParams, $state, $ionicModal, $timeout, $http, $filter, $ionicSlideBoxDelegate, playerService, $ionicHistory, $ionicNativeTransitions, toastr, $ionicPlatform, $q, $ionicLoading, $ionicPopup) {
   $http.defaults.headers.common['Authorization'] = "Bearer " + 'keynHfCb7Qp6svdyV';
   $scope.baseUrl = 'https://api.airtable.com/v0/app04N9yQPQZLwC8T';
   $ionicNativeTransitions.enable(false);
+  
+
 
   // IAP SETTINGS
   // Items for Sale: External App Store Ref
   var productIds = [
     'free_product',
-    'unlock'
+    'unlock',
   ];
   // Items for Sale: Internal Aittable ref
   $scope.productList = [
     'free_product',
     'unlock',
-    'iap_underholdning_v1'
+    'iap_hot_collection_v1',
+    'iap_underholdning_v1',
+    'iap_personlig_collection_v1',
+    'iap_mime_collection_v1',
+    'iap_forklare_dette_collection_v1',
+    'iap_nynne_collection_v1',
+    'iap_tegne_collection_v1',
   ];
+
   // Items already purchased
   $scope.restoreCollectionList = []
 
+  
   var spinner = '<ion-spinner icon="dots" class="spinner-stable"></ion-spinner><br/>';
 
   $scope.restoreCollections = function () {
@@ -58,24 +68,25 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     if(window.cordova && productId != undefined) {
       $ionicLoading.show({ template: spinner + 'Purchasing...' });
       inAppPurchase
-        .buy('free_product')
+        .buy('iap_hot_collection_v1')
         .then(function (data) {
           console.log(JSON.stringify(data));
           console.log('consuming transactionId: ' + data.transactionId);
           return inAppPurchase.consume(data.type, data.receipt, data.signature);
         })
         .then(function () {
-          // var alertPopup = $ionicPopup.alert({
-          //   title: 'Purchase was successful!',
-          //   template: 'Check your console log for the transaction data'
-          // });
+          var alertPopup = $ionicPopup.alert({
+            title: 'Purchase was successful!',
+            template: 'Check your console log for the transaction data'
+          });
           alert("Purchase was successful!");
           console.log('consume done!');
           $ionicLoading.hide();
         })
         .catch(function (err) {
           $ionicLoading.hide();
-          console.log(err);
+          console.log("ERROER" + err);
+          alert("Something went wrong" + err)
           $ionicPopup.alert({
             title: 'Something went wrong',
             template: 'Check your console log for the error details'
@@ -86,13 +97,15 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
 
   $scope.closeModal = function() {
-    $('.category-view').removeClass('slideUp');
-    $('.category-view').addClass('slideDown');
-    $timeout(function () {
-      $scope.modal.hide();
-      $('.category-view').removeClass('slideDown');
-    }, 300);
+    $scope.modal.remove()
+    .then(function() {
+      $scope.modal = null;
+    });
   };
+
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
 
   // Player management
   $scope.players = playerService.getAll();
@@ -108,9 +121,9 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   // Update player points
   $scope.backToScoreBoard = function(player) {
     $ionicHistory.goBack();
-    toastr.info('<b>' + player.name + '</b> skal vælge næste spørgsmål', {
-      iconClass: 'toast-info choose-question'
-    });
+    // toastr.info('<b>' + player.name + '</b> skal vælge næste spørgsmål', {
+    //   iconClass: 'toast-info choose-question'
+    // });
   };
   $scope.updatePlayerPoints = function (player, points) {
     player.points = (player.points + points)
@@ -170,13 +183,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     $scope.startGameCategories = $scope.selectedCategories
   }
 
-  $scope.playThroughValue = 0
-
   $scope.gameStarted = false
-
-  $scope.updateCategoryProgress = function(category, progress) {
-    // playedSets.
-  }
 
   // Restart game
   $scope.startOver = function(players, index) {
@@ -190,51 +197,52 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     $scope.openScoreBoard()
     $scope.gameStarted = false
 
-    // angular.forEach(recordData.id, function(sets, index){
-    //   console.log(sets)
-    //
-    //   _.findWhere($scope.PlayThroughs, {setId: sets});
-    // })
-
-    // PlayThrough management
-
-    // Select Next Question Set
-    // if($scope.playThroughValue == 4)
-    //   $scope.playThroughValue = 0;
-    // else {
-    //   $scope.playThroughValue += 1;
-    // }
-
-    // $scope.updatePlayerPoints = function (player, points) {
-    //   console.log("update 1")
-    //   player.points = (player.points + points)
-    //   // $ionicHistory.goBack();
-    // };
-
     angular.forEach($scope.selectedCategories, function(eachCategory, index){
       eachCategory.played = false
-      eachCategory.progress = eachCategory.progress += 1
 
-      $scope.alreadyExist = _.findWhere(playThroughService.getAll(), {categoryId: eachCategory.categoryTitle});
-      if($scope.alreadyExist == undefined) {
-        playThroughService.add({
-          categoryId: eachCategory.categoryTitle,
-          progress: eachCategory.progress
-        });
+      if(eachCategory.progress == 4) {
+        var updatedProgress = 0
       } else {
-        console.log(playedSets)
-        console.log("Already thehere ")
+        var updatedProgress = eachCategory.progress += 1
       }
 
+      $ionicPlatform.ready(function () {
+        $cordovaNativeStorage.setItem(eachCategory.categoryTitle, updatedProgress).then(function (value) {
+          console.log(value);
+        });
+      })
+
+      // $scope.alreadyExist = _.findWhere(playThroughService.getAll(), {categoryId: eachCategory.categoryTitle});
+      // if($scope.alreadyExist == undefined) {
+      //   playThroughService.add({
+      //     categoryId: eachCategory.categoryTitle,
+      //     progress: eachCategory.progress
+      //   });
+      // } else {
+      //   console.log(playedSets)
+      //   console.log("Already thehere ")
+      // }
 
     });
 
-    console.log('service:', playThroughService.getAll())
+
     console.log($scope.selectedCategories)
 
     $scope.selectedCategories = []
 
   }
+
+  // Show intro from in game
+  $scope.showIntroInGame = function() {
+    $ionicModal.fromTemplateUrl('./templates/rules.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+      $scope.modal.show();
+    });
+  };
+
   // Play again button on scoreBoard
   $scope.plagAgain = function() {
     $state.go('app.collections',{cache: false})
@@ -251,22 +259,12 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     });
   };
 
-  $scope.categoryDetails = []
-  // View Category
-  $scope.openViewCategorie = function(data) {
-    $scope.categoryDetails = data
-    $ionicModal.fromTemplateUrl('./templates/category-view.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
-  };
 
   $scope.skipIntro = function() {
-    app.collections
-
+    $state.go('app.collections');
+    $ionicPlatform.ready(function () {
+      $cordovaNativeStorage.setItem("skip-intro", true)
+    });
   }
 
   // Start Game
@@ -312,16 +310,39 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 })
 
 
-.controller('IntroCtrl', ['$scope', '$state', '$timeout', '$ionicSlideBoxDelegate', '$ionicGesture', '$ionicModal', function($scope, $state, $timeout, $ionicSlideBoxDelegate, $ionicGesture, $ionicModal){
+.controller('IntroCtrl', ['$scope', '$ionicPlatform', '$cordovaNativeStorage', '$state', '$timeout', '$ionicSlideBoxDelegate', '$ionicGesture', '$ionicModal', function($scope, $ionicPlatform, $cordovaNativeStorage, $state, $timeout, $ionicSlideBoxDelegate, $ionicGesture, $ionicModal){
 
   $scope.introSlideChange = function(index) {
     $scope.slideIndex = index;
   };
 
+  // If intro skipped
+  $ionicPlatform.ready(function () {
+    $cordovaNativeStorage.getItem("skip-intro").then(function(value) {
+      if(value == true) {
+        $state.go('app.collections');
+      }
+    });
+  });
+  
+
 }])
 
-.controller('CollectionsCtrl', function($scope, $timeout, $ionicSlideBoxDelegate, $http, $stateParams, $state, $ionicHistory, playThroughService, $q) {
+.controller('CollectionsCtrl', function($scope, $ionicModal, $ionicPlatform, $timeout, $cordovaNativeStorage, $ionicSlideBoxDelegate, $http, $stateParams, $state, $ionicHistory, $q, $ionicSlideBoxDelegate) {
   $scope.displaySlider = true
+
+  $scope.openCollectionView = function(selectedCollectionData) {
+    $scope.collectionDetails = selectedCollectionData
+    console.log(selectedCollectionData)
+    $ionicModal.fromTemplateUrl('./templates/collection-view.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+      $scope.modal.show();
+    });
+
+  };
 
   $scope.groups = []
   $scope.collectionsReady = false
@@ -354,13 +375,17 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
               var validCollecionIconUrl = ''
             }
             $scope.collections.push({
+              date: data.createdTime,
               id: data.id,
               name: data.fields.Name,
+              order: data.fields.order,
               description: data.fields.description,
               icon: validCollecionIconUrl,
               included_categories: data.fields.included_categories,
               isLocked: data.fields.locked,
-              iapId: data.fields.iap_id
+              iapId: data.fields.iap_id,
+              price: data.fields.price,
+              hidden: data.fields.show,
             })
           })
         }).finally(function() {
@@ -368,9 +393,12 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
           if(itemsProcessed === array.length) {
             $scope.getCategories($scope.collections)
             // Check if user already purchased a collection
+            console.log("Feed done")            
             if (window.cordova) {
-              // $scope.loadProducts()
+              $scope.loadProducts()
               $scope.restoreCollections()
+              console.log("Feed done cordova")            
+              
             }
           }
         })
@@ -391,17 +419,34 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
             } else {
               var validIconUrl = ''
             }
+            var formatCollectionId = data.fields.collection_id
             $scope.categoryDataSets = data.fields.Sets
-            $scope.categories.push({
-              publishedAt: data.createdTime,
-              id: $scope.categoryDataSets,
-              collectionId: data.fields.collection_id,
-              categoryTitle: data.fields.Name,
-              description: data.fields.description,
-              cover_image: validCoverImage,
-              icon: validIconUrl,
-              progress: 0
-            })
+            $ionicPlatform.ready(function () {
+              $cordovaNativeStorage.getItem(data.fields.Name).then(function (progressValue) {
+                $scope.categories.push({
+                  publishedAt: data.createdTime,
+                  id: $scope.categoryDataSets,
+                  collectionId: formatCollectionId,
+                  categoryTitle: data.fields.Name,
+                  description: data.fields.description,
+                  cover_image: validCoverImage,
+                  icon: validIconUrl, 
+                  progress: progressValue
+                })
+              }, function (error) {
+                $scope.categories.push({
+                  publishedAt: data.createdTime,
+                  id: $scope.categoryDataSets,
+                  collectionId: formatCollectionId,
+                  categoryTitle: data.fields.Name,
+                  description: data.fields.description,
+                  cover_image: validCoverImage,
+                  icon: validIconUrl, 
+                  progress: 0
+                })
+              });
+            });
+
           }
         })
       }).finally(function() {
@@ -513,7 +558,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   $scope.$on("$ionicSlides.sliderInitialized", function(event, data){
     $scope.slider = data.slider;
   });
-
+  
   $scope.selectCollection = function (selectedCollectionData) {
     $state.go('app.categories', {categoriesInCollection: selectedCollectionData });
   }
@@ -526,6 +571,48 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     }
   });
 
+  // View Category
+  $scope.openViewCategorie = function(data) {
+    $scope.selectedCollection = data
+    console.log($scope.selectedCollection)
+    $ionicModal.fromTemplateUrl('./templates/category-view.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+      $scope.data = {};
+
+      // angular.forEach($scope.categories, function(value) {
+      //   console.log(value)
+      // })
+
+      // $scope.collection = $scope.collections
+      $scope.categories = $scope.categories
+      var selectedCategoryInCollection = _.findWhere($scope.categories, {collectionId: $scope.selectedCollection.id});
+      console.log(selectedCategoryInCollection)
+      console.log($scope.categories)
+      $scope.modal.show();
+
+      // Category Modal Slider 
+      $scope.categoryViewSliderOptions = {
+        // effect: 'slide'
+      }
+      $scope.data.sliderDelegate2 = null;
+      $scope.gotoSlide = function(index) {
+        $timeout(function(){
+          $scope.data.sliderDelegate2.slideTo(index);
+        },100)
+      }
+    });
+  };
+
+  $scope.closeModal = function() {
+    $scope.modal.remove()
+    .then(function() {
+      $scope.modal = null;
+    });
+  };
+
 })
 .controller('CategoriesCtrl', function($scope, $http, $stateParams, $state) {
 
@@ -533,24 +620,20 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
 })
 
-.controller('GameBoardCtrl', function($scope, $http, $timeout, $state, $stateParams, $ionicHistory, playThroughService, toastr) {
+.controller('GameBoardCtrl', function($scope, $http, $timeout, $state, $stateParams, $ionicHistory, toastr) {
 
   $scope.setRecordData = $state.params.startGameData
   $scope.selectedGameboard = []
   $scope.questionsLoaded = false
 
-
+  console.log($scope.setRecordData)
   // fetchAllQustions.getAll().then(function(data) {
   //   console.log('getAll',data);
   // })
 
   angular.forEach($scope.setRecordData, function(recordData, index){
-
-    // Random category - NOT IN USE
-    // $scope.randomSet = recordData.id[Math.floor(Math.random() * recordData.id.length)];
-    // $scope.shuffledSetList = _.shuffle(recordData.id)
-
-    $http.get($scope.baseUrl + '/questions' + '?&filterByFormula=(set_id="'+ recordData.id[recordData.progress] +'")&view=Grid%20view'
+    var fetchProgress = recordData.progress
+    $http.get($scope.baseUrl + '/questions' + '?&filterByFormula=(set_id="'+ recordData.id[fetchProgress] +'")&view=Grid%20view'
     ).then( function(resp) {
       angular.forEach(resp.data.records, function(questionData, index){
         $scope.selectedGameboard.push({
@@ -583,7 +666,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
 })
 
-.controller('QuestionsCtrl', function($scope, $http, $state, $stateParams) {
+.controller('QuestionsCtrl', function($scope, $http, $state, $stateParams, $ionicHistory) {
   $scope.theQuestionData = $state.params.questionData
   $scope.questions = []
   if($scope.theQuestionData != null) {
@@ -610,5 +693,9 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   $scope.$on('$ionicView.beforeLeave', function (event) {
     $scope.displayAnswerState = false
   });
+
+  $scope.noOnKnow = function() {
+    $ionicHistory.goBack();
+  };
 
 });

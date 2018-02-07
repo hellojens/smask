@@ -469,7 +469,7 @@ svg {
     color: #fff !important; }
 
 .groupsList {
-  padding: 20px 0 20px 0;
+  padding: 20px 0 00px 0;
   position: relative; }
   .groupsList .groupBackgroundColor {
     position: absolute;
@@ -478,8 +478,7 @@ svg {
     left: 0px;
     bottom: 0px;
     content: '';
-    z-index: -1;
-    opacity: 0.7; }
+    z-index: -1; }
   .groupsList .group-headline {
     font-size: 32px;
     text-transform: uppercase;
@@ -608,6 +607,39 @@ svg {
       box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
       border-radius: 3px;
       background-color: #202020; }
+      .collectionsList .collectionsItem .categoryImage .collection-price-banner {
+        background: #2a76c9;
+        border-radius: 104px;
+        width: 85%;
+        margin: 0 auto;
+        position: relative;
+        top: 71px;
+        font-weight: 800;
+        text-align: center;
+        letter-spacing: 0px;
+        font-size: 12px;
+        padding: 1px 0px;
+        border: 1px solid rgba(32, 32, 32, 0.501961);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .collectionsList .collectionsItem .categoryImage .collection-price-banner img {
+          width: 14px;
+          position: relative;
+          top: 2px;
+          margin-bottom: -1px; }
+      .collectionsList .collectionsItem .categoryImage .lock-icon {
+        float: right;
+        margin: 8px;
+        box-shadow: 0 0px 6px rgba(0, 0, 0, 0.15);
+        background: #fff;
+        border-radius: 33px;
+        height: 26px;
+        position: absolute;
+        bottom: -17px;
+        right: -13px; }
+        .collectionsList .collectionsItem .categoryImage .lock-icon img {
+          padding: 3px;
+          width: 25px;
+          height: 25px; }
       .collectionsList .collectionsItem .categoryImage .overlay {
         position: absolute;
         z-index: 9;
@@ -646,13 +678,38 @@ svg {
         text-overflow: ellipsis;
         overflow: hidden; }
 
+.modal {
+  background: rgba(0, 0, 0, 0.6) !important; }
+
+.modal-backdrop-bg {
+  opacity: 0 !important; }
+
+.category-view-slider h2 {
+  font-size: 22px;
+  text-transform: uppercase;
+  width: 100%;
+  position: fixed;
+  top: 8%;
+  text-align: center;
+  margin: 0 auto;
+  padding: 0 30px;
+  line-height: 1; }
+  .category-view-slider h2 img {
+    position: relative;
+    top: 2px;
+    height: 21px;
+    margin-right: 8px; }
+
+.swiper-pagination-bullet {
+  background: #fff !important; }
+
 .category-view.ion-nifty-modal {
   width: 80% !important;
   margin: 0 auto;
   min-height: 70% !important;
   border-radius: 3px !important;
-  top: 12%;
-  background: transparent !important;
+  top: 17%;
+  background: #ffffff !important;
   -webkit-animation-duration: 2s; }
   .category-view.ion-nifty-modal .category-view-content {
     text-align: center;
@@ -670,10 +727,34 @@ svg {
         position: relative;
         top: 50%;
         transform: translateY(-50%); }
-    .category-view.ion-nifty-modal .category-view-content h3, .category-view.ion-nifty-modal .category-view-content p {
+    .category-view.ion-nifty-modal .category-view-content .collection-icon {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
+      border-radius: 3px;
+      background-color: #202020;
+      margin-top: -30px;
+      left: 50%;
+      margin-left: -18px; }
+      .category-view.ion-nifty-modal .category-view-content .collection-icon img {
+        width: 100%;
+        padding: 8px; }
+    .category-view.ion-nifty-modal .category-view-content h3, .category-view.ion-nifty-modal .category-view-content h4, .category-view.ion-nifty-modal .category-view-content h5, .category-view.ion-nifty-modal .category-view-content p, .category-view.ion-nifty-modal .category-view-content b {
       color: #333; }
+    .category-view.ion-nifty-modal .category-view-content h3 {
+      padding-top: 20px; }
+    .category-view.ion-nifty-modal .category-view-content h4 {
+      padding-top: 15px; }
+    .category-view.ion-nifty-modal .category-view-content h5 {
+      padding-top: 15px;
+      padding-bottom: 10px;
+      font-size: 16px; }
     .category-view.ion-nifty-modal .category-view-content p {
       padding-bottom: 20px; }
+    .category-view.ion-nifty-modal .category-view-content ul li {
+      color: #333;
+      padding-bottom: 14px; }
   .category-view.ion-nifty-modal .modal-button-section {
     position: absolute;
     left: 0;
@@ -689,6 +770,13 @@ svg {
         background: linear-gradient(to bottom, #fc5a5a 0%, #c76a4a 100%);
         background: -moz-linear-gradient(top, #fc5a5a 0%, #c76a4a 100%);
         background: -webkit-linear-gradient(top, #fc5a5a 0%, #c9694b 100%); }
+        .category-view.ion-nifty-modal .modal-button-section .button.button-assertive.button-unlock {
+          background: #2a76c9; }
+          .category-view.ion-nifty-modal .modal-button-section .button.button-assertive.button-unlock img {
+            position: relative;
+            left: -11px;
+            top: 3px;
+            width: 20px; }
       .category-view.ion-nifty-modal .modal-button-section .button.button-light {
         background-color: white;
         color: #FC5B5A; }
@@ -853,12 +941,20 @@ svg {
     background-position: center;
     background-repeat: no-repeat;
     background-color: rgba(0, 0, 0, 0.3); }
+  .inGameMenu .cd-section .cd-modal-close.show-intro {
+    left: 5%;
+    background-size: 40px;
+    opacity: 0.9;
+    background-image: url(../img/icons/more.png);
+    background-position: center;
+    background-repeat: no-repeat; }
+    .inGameMenu .cd-section .cd-modal-close.show-intro.active {
+      bottom: 80px; }
   .inGameMenu .cd-section .cd-modal-close.start-over {
     display: none;
     left: 5%;
     background-size: 40px;
     opacity: 0.9;
-    background-color: #fc5b5a;
     background-image: url(../img/icons/startover.png);
     background-position: center;
     background-repeat: no-repeat; }

@@ -1,4 +1,4 @@
-<ion-view view-title="SMASK" hide-nav-bar="true">
+<ion-view view-title="SMASK" hide-nav-bar="true" can-swipe-back=“false”>
   <div class="loadingSpinner" ng-hide="collectionsReady">
     <img class="loadingSpinner" src="./img/icons/loading-spin.svg" width="50">
   </div>
@@ -13,38 +13,51 @@
 
         <div class="collectionsList animated fadeIn">
           <div ng-repeat="groupCollectionIds in group.included_collections track by $index">
-            <div ng-repeat="collection in collections | filter: {id: groupCollectionIds} track by $index" ng-class="{'lockedCollection' : productList.indexOf(collection.iapId) !== -1, 'unLockedCollection' : restoreCollectionList.indexOf(collection.iapId) !== -1}">
+            <div  ng-repeat="collection in collections | filter: {id: groupCollectionIds, hidden: true} track by $index" 
+                  >
+                  <!-- ng-class="{'lockedCollection' : productList.indexOf(collection.iapId) !== -1, 'unLockedCollection' : restoreCollectionList.indexOf(collection.iapId) !== -1}" -->
+
               <h3 class="collectionName">{{collection.name}}</h3>
               <div class="slide-content">
                 <ion-slides options="collectionsSliderSettings" slider="data.slider">
                   <!-- Collection Start  -->
                   <ion-slide-page class="collectionsItem first">
                     <div class="categoryImage" ng-click="buy(collection.iapId)">
+                    <!-- <div class="categoryImage" ng-click="openCollectionView(collection)"> -->
                       <div class="overlay">
                         <div class="collectionIcon">
                           <img class="theIcon" ng-src="{{collection.icon}}">
                         </div>
-                        <h3 class="collection-headline"
-                          ng-if="productList.indexOf(collection.iapId) !== -1">
-                          Køb dette sæt
-                        </h3>
-                        <h3 class="collection-headline"
-                          ng-if="restoreCollectionList.indexOf(collection.iapId) !== -1">
-                          Tilkøbt sæt
-                        </h3>
+                      </div>
+                      <div ng-if="collection.isLocked" class="collection-price-banner"
+                      ng-show="productList.indexOf(collection.iapId) !== -1"
+                      ng-hide="restoreCollectionList.indexOf(collection.iapId) !== -1">
+                       <img ng-src="./img/icons/un-lock.png"> {{collection.price}} Kr,- 
+                      </div>
+                      <div ng-if="collection.isLocked" class="collection-price-banner"
+                      ng-if="restoreCollectionList.indexOf(collection.iapId) !== -1">
+                       <img ng-src="./img/icons/un-lock.png"> Købt 
                       </div>
                     </div>
                   </ion-slide-page>
                   <!-- Categories in Collections -->
-                  <ion-slide-page class="collectionsItem animated" ng-repeat="category in categories | filter: {collectionId: collection.id} | orderBy: '-publishedAt'" ng-class="{'pulse': category.id == selected}">
+                  <ion-slide-page class="collectionsItem animated" 
+                    ng-repeat="category in categories | filter: {collectionId: collection.id} | orderBy: '-publishedAt' track by $index" 
+                    ng-class="{'pulse': category.collectionId == selected}"
+                    >
                     <div class="categoryImage" style="background-image: url('{{ category.cover_image }}')">
-                      <div class="overlay" ng-click="openViewCategorie(category)">
+                      <div class="overlay" ng-click="openViewCategorie(collection); gotoSlide($index)">
                       </div>
-                      <div class="selectBox checked" ng-show="categories.id == category.id" ng-repeat="categories in selectedCategories" ng-click="selectCategorie(category); select(category.id)">
+                      <div ng-if="collection.isLocked" class="lock-icon">
+                        <img ng-src="./img/icons/lock-black.png">
+                      </div>
+                      <div class="selectBox checked" 
+                        ng-show="categories.collectionId == category.collectionId" 
+                        ng-repeat="categories in selectedCategories" 
+                        ng-click="selectCategorie(category); select(category.collectionId)">
                       </div>
                     </div>
                     <div class="categoryContent">
-
                       <h5>{{ category.categoryTitle }}</h5>
                     </div>
                   </ion-slide-page>

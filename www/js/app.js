@@ -16,8 +16,9 @@ angular.module('starter', [
   'ionic-native-transitions',
   'ngAnimate',
   'toastr',
+  'ngCordova.plugins.nativeStorage',
 ])
-.run(function($ionicPlatform, $state, $rootScope, $http) {
+.run(function($ionicPlatform, $state, $rootScope, $http, $cordovaNativeStorage) {
   $rootScope.$state = $state;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -98,30 +99,6 @@ angular.module('starter', [
     remove: _remove
   };
 })
-.factory('playThroughService', function ($localStorage) {
-
-  $localStorage = $localStorage.$default({
-    playThrough: []
-  });
-
-  var _getAll = function () {
-    return $localStorage.playThrough;
-  };
-
-  var _add = function (playedSets) {
-    $localStorage.playThrough.push(playedSets);
-  }
-
-  var _remove = function (playedSets) {
-    $localStorage.playThrough.splice($localStorage.playThrough.indexOf(playedSets), 1);
-  }
-
-  return {
-    getAll: _getAll,
-    add: _add,
-    remove: _remove
-  };
-})
 .directive('something', [function() {
     return {
         restrict: 'A',
@@ -131,12 +108,15 @@ angular.module('starter', [
         }
     };
 }])
-.config(function($stateProvider, $urlRouterProvider, $ionicCloudProvider, $ionicNativeTransitionsProvider, toastrConfig) {
+.config(function($stateProvider, $urlRouterProvider, $ionicCloudProvider, $ionicNativeTransitionsProvider, toastrConfig, $ionicConfigProvider) {
   // $ionicNativeTransitionsProvider.setDefaultTransition({
   //     type: 'slide',
   //     direction: 'left'
   // })
 
+  // Disable swipe back
+  $ionicConfigProvider.views.swipeBackEnabled(false);
+  
   angular.extend(toastrConfig, {
     autoDismiss: false,
     containerId: 'toast-container',
@@ -160,8 +140,8 @@ angular.module('starter', [
   });
 
   $ionicCloudProvider.init({
-    "core": {
-      "app_id": "2b66832a"
+    insights: {
+      enabled: false
     }
   })
 
