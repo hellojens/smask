@@ -17,7 +17,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   $scope.productList = [
     'free_product',
     'unlock',
-    'iap_hot_collection_v1',
+    'iap_hot_collection_v1.4',
     'iap_underholdning_v1',
     'iap_personlig_collection_v1',
     'iap_mime_collection_v1',
@@ -44,6 +44,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
       })
       .catch(function (err) {
         console.log(err);
+        alert(err)
         $ionicPopup.alert({
           title: 'Something went wrong',
           template: 'Check your console log for the error details'
@@ -63,12 +64,13 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
       });
   };
   $scope.buy = function (productId) {
+    console.log(productId)
     var productIdConverted =  "'" + productId + "'"
     console.log(productIdConverted)
     if(window.cordova && productId != undefined) {
       $ionicLoading.show({ template: spinner + 'Purchasing...' });
       inAppPurchase
-        .buy('iap_hot_collection_v1')
+        .buy(productId)
         .then(function (data) {
           console.log(JSON.stringify(data));
           console.log('consuming transactionId: ' + data.transactionId);
@@ -85,10 +87,10 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
         })
         .catch(function (err) {
           $ionicLoading.hide();
-          console.log("ERROER" + err);
+          console.log("ERROER" + err.data);
           alert("Something went wrong" + err)
           $ionicPopup.alert({
-            title: 'Something went wrong',
+            title: 'Something went wrong' + err,
             template: 'Check your console log for the error details'
           });
         });
@@ -283,22 +285,10 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
       });
       // Shuffle who starts
       $scope.shufflePlayers = _.sample($scope.players);
-      $scope.shufflePlayersAgain = function() {
-        $scope.newShuffle = _.sample($scope.players)
-        if($scope.newShuffle.name == $scope.shufflePlayers.name) {
-          console.log("SAME SHIT")
-          // $scope.newShuffleAgain = _.sample($scope.players)
-          $scope.whoStarts = _.sample($scope.players)
-        } else {
-          console.log("not - -- SAME SHIT")
-          $scope.whoStarts = $scope.shufflePlayers
-        }
-      }
       toastr.info('<b>' + $scope.shufflePlayers.name + '</b> starter som oplæser, og skal have telefonen.', {
         iconClass: 'toast-info',
         onTap: function() {
-          $scope.shufflePlayersAgain()
-          toastr.info('<b>' + $scope.whoStarts.name + '</b> skal vælge første spørgsmål.', {
+          toastr.info('<b>' + $scope.shufflePlayers.name + '</b> skal vælge første spørgsmål.', {
             iconClass: 'toast-info choose-question',
           });
         }
@@ -333,7 +323,6 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
   $scope.openCollectionView = function(selectedCollectionData) {
     $scope.collectionDetails = selectedCollectionData
-    console.log(selectedCollectionData)
     $ionicModal.fromTemplateUrl('./templates/collection-view.html', {
       scope: $scope,
       animation: 'slide-in-up'
@@ -574,7 +563,6 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   // View Category
   $scope.openViewCategorie = function(data) {
     $scope.selectedCollection = data
-    console.log($scope.selectedCollection)
     $ionicModal.fromTemplateUrl('./templates/category-view.html', {
       scope: $scope,
       animation: 'slide-in-up'
@@ -586,11 +574,10 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
       //   console.log(value)
       // })
 
-      // $scope.collection = $scope.collections
-      $scope.categories = $scope.categories
+      // // $scope.collection = $scope.collections
+      // $scope.categories = $scope.categories
       var selectedCategoryInCollection = _.findWhere($scope.categories, {collectionId: $scope.selectedCollection.id});
-      console.log(selectedCategoryInCollection)
-      console.log($scope.categories)
+
       $scope.modal.show();
 
       // Category Modal Slider 
@@ -626,7 +613,6 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   $scope.selectedGameboard = []
   $scope.questionsLoaded = false
 
-  console.log($scope.setRecordData)
   // fetchAllQustions.getAll().then(function(data) {
   //   console.log('getAll',data);
   // })
@@ -658,7 +644,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
   $scope.selectQuestion = function(selectedQuestion) {
     if(selectedQuestion.played != true) {
-      $state.go('app.question', {questionData: selectedQuestion });
+      $state.go('app.question', {questionData: selectedQuestion, cache:false});
     }
     selectedQuestion.played = true
     // toastr.clear();
