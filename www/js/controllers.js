@@ -12,6 +12,13 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   var productIds = [
     'free_product',
     'unlock',
+    'iap_hot_collection_v1.4',
+    'iap_underholdning_v1',
+    'iap_personlig_collection_v1',
+    'iap_mime_collection_v1',
+    'iap_forklare_dette_collection_v1',
+    'iap_nynne_collection_v1',
+    'iap_tegne_collection_v1'
   ];
   // Items for Sale: Internal Aittable ref
   $scope.productList = [
@@ -23,7 +30,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     'iap_mime_collection_v1',
     'iap_forklare_dette_collection_v1',
     'iap_nynne_collection_v1',
-    'iap_tegne_collection_v1',
+    'iap_tegne_collection_v1'
   ];
 
   // Items already purchased
@@ -58,6 +65,8 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
       .then(function (products) {
         console.log("procuts" + products)
         $scope.products = products;
+        $scope.restoreCollections()
+
       })
       .catch(function (err) {
         console.log(err);
@@ -65,8 +74,8 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   };
   $scope.buy = function (productId) {
     console.log(productId)
-    var productIdConverted =  "'" + productId + "'"
-    console.log(productIdConverted)
+    // var productIdConverted =  "'" + productId + "'"
+    // console.log(productIdConverted)
     if(window.cordova && productId != undefined) {
       $ionicLoading.show({ template: spinner + 'Purchasing...' });
       inAppPurchase
@@ -321,131 +330,144 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 .controller('CollectionsCtrl', function($scope, $ionicModal, $ionicPlatform, $timeout, $cordovaNativeStorage, $ionicSlideBoxDelegate, $http, $stateParams, $state, $ionicHistory, $q, $ionicSlideBoxDelegate) {
   $scope.displaySlider = true
 
-  $scope.openCollectionView = function(selectedCollectionData) {
-    $scope.collectionDetails = selectedCollectionData
-    $ionicModal.fromTemplateUrl('./templates/collection-view.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
+  // $scope.openCollectionView = function(selectedCollectionData) {
+  //   $scope.collectionDetails = selectedCollectionData
+  //   $ionicModal.fromTemplateUrl('./templates/collection-view.html', {
+  //     scope: $scope,
+  //     animation: 'slide-in-up'
+  //   }).then(function(modal) {
+  //     $scope.modal = modal;
+  //     $scope.modal.show();
+  //   });
 
-  };
+  // };
 
   $scope.groups = []
   $scope.collectionsReady = false
 
-  $http.get($scope.baseUrl + '/groups' + '?&view=Grid%20view'
-  ).then( function(groups) {
-    angular.forEach(groups.data.records, function(data, groupsIndex){
-      $scope.groups.push({
-        name: data.fields.Name,
-        description: data.fields.description,
-        color: data.fields.color,
-        included_collections: data.fields.inclueded_collections_id,
+  $scope.loadCollections = function() {
+  
+    $http.get($scope.baseUrl + '/groups' + '?&view=Grid%20view'
+    ).then( function(groups) {
+      angular.forEach(groups.data.records, function(data, groupsIndex){
+        $scope.groups.push({
+          name: data.fields.Name,
+          description: data.fields.description,
+          color: data.fields.color,
+          included_collections: data.fields.inclueded_collections_id,
+        })
       })
-    })
-  }).finally(function() {
-    $scope.loadingCollections = true
-    $scope.collections = []
-    $scope.categories = []
+    }).finally(function() {
+      $scope.loadingCollections = true
+      $scope.collections = []
+      $scope.categories = []
 
-    var itemsProcessed = 0;
+      var itemsProcessed = 0;
 
-    angular.forEach($scope.groups, function(g) {
-      angular.forEach(g.included_collections, function(included_ids, indsssI, array) {
-        $http.get($scope.baseUrl + '/collections' + '?&filterByFormula=(id="'+ included_ids +'")&view=Grid%20view'
-        ).then( function(collections) {
-          angular.forEach(collections.data.records, function(data, collectionIndex){
-            if(data.fields.hasOwnProperty('icon')) {
-              var validCollecionIconUrl = data.fields.icon[0].thumbnails.large.url
-            } else {
-              var validCollecionIconUrl = ''
-            }
-            $scope.collections.push({
-              date: data.createdTime,
-              id: data.id,
-              name: data.fields.Name,
-              order: data.fields.order,
-              description: data.fields.description,
-              icon: validCollecionIconUrl,
-              included_categories: data.fields.included_categories,
-              isLocked: data.fields.locked,
-              iapId: data.fields.iap_id,
-              price: data.fields.price,
-              hidden: data.fields.show,
+      angular.forEach($scope.groups, function(g) {
+        angular.forEach(g.included_collections, function(included_ids, indsssI, array) {
+          $http.get($scope.baseUrl + '/collections' + '?&filterByFormula=(id="'+ included_ids +'")&view=Grid%20view'
+          ).then( function(collections) {
+            angular.forEach(collections.data.records, function(data, collectionIndex){
+              if(data.fields.hasOwnProperty('icon')) {
+                var validCollecionIconUrl = data.fields.icon[0].thumbnails.large.url
+              } else {
+                var validCollecionIconUrl = ''
+              }
+              $scope.collections.push({
+                date: data.createdTime,
+                id: data.id,
+                name: data.fields.Name,
+                order: data.fields.order,
+                description: data.fields.description,
+                icon: validCollecionIconUrl,
+                included_categories: data.fields.included_categories,
+                isLocked: data.fields.locked,
+                iapId: data.fields.iap_id,
+                price: data.fields.price,
+                hidden: data.fields.show,
+              })
             })
+          }).finally(function() {
+            itemsProcessed++;
+            if(itemsProcessed === array.length) {
+              $scope.getCategories($scope.collections)
+              // Check if user already purchased a collection
+              console.log("Feed done")            
+              if (window.cordova) {
+                $scope.loadProducts()
+                console.log("Feed done cordova")            
+                
+              }
+            }
+          })
+        })
+      });
+
+      $scope.getCategories = function(collectionsData) {
+        $http.get($scope.baseUrl + '/categories').then( function(resp) {
+          angular.forEach(resp.data.records, function(data, i, array2) {
+            if(data.fields.hasOwnProperty('Name')) {
+              if(data.fields.hasOwnProperty('cover_image')) {
+                var validCoverImage = data.fields.cover_image[0].thumbnails.large.url
+              } else {
+                var validCoverImage = ''
+              }
+              if(data.fields.hasOwnProperty('icon')) {
+                var validIconUrl = data.fields.icon[0].thumbnails.small.url
+              } else {
+                var validIconUrl = ''
+              }
+              var formatCollectionId = data.fields.collection_id
+              var categoryDataSets = data.fields.Sets
+              $ionicPlatform.ready(function () {
+                $cordovaNativeStorage.getItem(data.fields.Name).then(function (progressValue) {
+                  $scope.categories.push({
+                    publishedAt: data.createdTime,
+                    id: categoryDataSets,
+                    collectionId: formatCollectionId,
+                    categoryTitle: data.fields.Name,
+                    description: data.fields.description,
+                    cover_image: validCoverImage,
+                    icon: validIconUrl, 
+                    progress: progressValue
+                  })
+                }, function (error) {
+                  $scope.categories.push({
+                    publishedAt: data.createdTime,
+                    id: categoryDataSets,
+                    collectionId: formatCollectionId,
+                    categoryTitle: data.fields.Name,
+                    description: data.fields.description,
+                    cover_image: validCoverImage,
+                    icon: validIconUrl, 
+                    progress: 0
+                  })
+                });
+              });
+
+            }
           })
         }).finally(function() {
-          itemsProcessed++;
-          if(itemsProcessed === array.length) {
-            $scope.getCategories($scope.collections)
-            // Check if user already purchased a collection
-            console.log("Feed done")            
-            if (window.cordova) {
-              $scope.loadProducts()
-              $scope.restoreCollections()
-              console.log("Feed done cordova")            
-              
-            }
-          }
+          $timeout(function() {
+            $scope.collectionsReady = true
+          }, 1000);
         })
-      })
+      }
+
     });
 
-    $scope.getCategories = function(collectionsData) {
-      $http.get($scope.baseUrl + '/categories').then( function(resp) {
-        angular.forEach(resp.data.records, function(data, i, array2) {
-          if(data.fields.hasOwnProperty('Name')) {
-            if(data.fields.hasOwnProperty('cover_image')) {
-              var validCoverImage = data.fields.cover_image[0].thumbnails.large.url
-            } else {
-              var validCoverImage = ''
-            }
-            if(data.fields.hasOwnProperty('icon')) {
-              var validIconUrl = data.fields.icon[0].thumbnails.small.url
-            } else {
-              var validIconUrl = ''
-            }
-            var formatCollectionId = data.fields.collection_id
-            $scope.categoryDataSets = data.fields.Sets
-            $ionicPlatform.ready(function () {
-              $cordovaNativeStorage.getItem(data.fields.Name).then(function (progressValue) {
-                $scope.categories.push({
-                  publishedAt: data.createdTime,
-                  id: $scope.categoryDataSets,
-                  collectionId: formatCollectionId,
-                  categoryTitle: data.fields.Name,
-                  description: data.fields.description,
-                  cover_image: validCoverImage,
-                  icon: validIconUrl, 
-                  progress: progressValue
-                })
-              }, function (error) {
-                $scope.categories.push({
-                  publishedAt: data.createdTime,
-                  id: $scope.categoryDataSets,
-                  collectionId: formatCollectionId,
-                  categoryTitle: data.fields.Name,
-                  description: data.fields.description,
-                  cover_image: validCoverImage,
-                  icon: validIconUrl, 
-                  progress: 0
-                })
-              });
-            });
+  }
 
-          }
-        })
-      }).finally(function() {
-        $timeout(function() {
-          $scope.collectionsReady = true
-        }, 1000);
-      })
+  $scope.loadCollections()
+
+  $timeout(function() {
+    if($scope.collectionsReady != true) {
+      $scope.loadCollections()
     }
+  }, 8000);
 
-  });
+
 
 
 
@@ -563,6 +585,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   // View Category
   $scope.openViewCategorie = function(data) {
     $scope.selectedCollection = data
+    $scope.selectedCate = data
     $ionicModal.fromTemplateUrl('./templates/category-view.html', {
       scope: $scope,
       animation: 'slide-in-up'
@@ -575,8 +598,8 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
       // })
 
       // // $scope.collection = $scope.collections
-      // $scope.categories = $scope.categories
-      var selectedCategoryInCollection = _.findWhere($scope.categories, {collectionId: $scope.selectedCollection.id});
+      $scope.categories = $scope.categories
+      // var selectedCategoryInCollection = _.findWhere($scope.categories, {collectionId: $scope.selectedCollection.id});
 
       $scope.modal.show();
 
