@@ -29,10 +29,9 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   $scope.restoreCollectionList = []
 
   $scope.getAndSetRestoreCollectionList = function() {
-    console.log("Resotre from local storage")
     $ionicPlatform.ready(function () {
       $cordovaNativeStorage.getItem("Purchases").then(function(purchases) {
-        console.log("Trying to get storage " + purchases)
+        console.log("Restoring Purchases from LocalStorage")
         angular.forEach(purchases, function(data) {
           console.log(data)
           $scope.restoreCollectionList.push(data.productId)
@@ -45,14 +44,14 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   var spinner = '<ion-spinner icon="dots" class="spinner-stable"></ion-spinner><br/>';
 
   $scope.restoreCollections = function () {
-    console.log("trying to restore purchases")
+    console.log("Fetching Purcheses from Apple")
     if(window.cordova) {
       inAppPurchase
       .restorePurchases()
       .then(function (purchases) {
         $ionicPlatform.ready(function () {
           $cordovaNativeStorage.setItem("Purchases", purchases).then(function (purchaseList) {
-            console.log("Local Storage Set: " + purchaseList);
+            console.log("Update LocalStorage: " + purchaseList);
           });
         })
         $scope.getAndSetRestoreCollectionList()
@@ -93,7 +92,6 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
         .buy(productId)
         .then(function (data) {
           console.log(JSON.stringify(data));
-          console.log('consuming transactionId: ' + data.transactionId);
           return inAppPurchase.consume(data.type, data.receipt, data.signature);
         })
         .then(function () {
@@ -362,7 +360,9 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
         })
       })
     }).finally(function() {
+      console.log("Groups Done");
       $scope.loadingCollections = true
+
       $scope.collections = []
       $scope.categories = []
 
@@ -393,24 +393,31 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
               })
             })
           }).finally(function() {
+            console.log("Collection Done");
+            
             itemsProcessed++;
-            if(itemsProcessed === array.length) {
-              $scope.getCategories($scope.collections)
+            console.log('itemsProcessed++;: ', itemsProcessed);
+            console.log('included_ids.length: ', included_ids.length);
+            if(itemsProcessed === included_ids.length) {
+              console.log('itemsProcessed: ', itemsProcessed);
+              $scope.getCategories($scope.collection)
               // Check if user already purchased a collection
               console.log("Feed done")            
               if (window.cordova) {
                 console.log("Feed done cordova")            
                 $scope.loadProducts()
               }
-              $timeout(function() {
-                $scope.collectionsReady = true
-              }, 100);
+              
+
             }
+
           })
         })
       });
 
       $scope.getCategories = function(collectionsData) {
+        console.log('Categories - Fetch');
+
         $http.get($scope.baseUrl + '/categories').then( function(resp) {
           angular.forEach(resp.data.records, function(data, i, array2) {
             if(data.fields.hasOwnProperty('Name')) {
@@ -455,7 +462,10 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
             }
           })
         }).finally(function() {
-
+          console.log('Categories - Done');
+          $timeout(function() {
+            $scope.collectionsReady = true
+          }, 100);
         })
       }
     });

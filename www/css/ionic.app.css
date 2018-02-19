@@ -88,6 +88,24 @@ button:focus {
     background-color: #000;
     opacity: 0; } }
 
+.fade.ng-hide {
+  opacity: 0; }
+
+.fade.ng-hide-remove,
+.fade.ng-hide-add {
+  display: block !important;
+  /* or inline-block, as appropriate */ }
+
+.fade.ng-hide-remove {
+  transition: all linear 1000ms; }
+
+.fade.ng-hide-add {
+  transition: all linear 500ms; }
+
+.animated.fadeIn {
+  -webkit-animation-duration: 2s !important;
+  animation-duration: 2s !important; }
+
 .spark {
   fill: #FC5B5A;
   --angle: 360deg/6;
@@ -474,6 +492,7 @@ svg {
     color: #fff !important; }
 
 .groupsList {
+  opacity: 0;
   padding: 20px 0 00px 0;
   position: relative; }
   .groupsList .groupBackgroundColor {
