@@ -370,13 +370,18 @@ svg {
   left: 0;
   height: 100%;
   width: 100%;
-  text-align: center; }
+  text-align: center;
+  z-index: 99; }
   .loadingSpinner img {
     position: relative;
     width: 50px; }
 
+.reload-button {
+  position: absolute;
+  top: 45%; }
+
 .wowbg {
-  background: -webkit-linear-gr´adient(top, #fc5a5a 0%, #c9694b 100%) !important; }
+  background: -webkit-linear-gradient(top, #fc5a5a 0%, #c9694b 100%) !important; }
 
 .top-section {
   padding: 15px; }
@@ -714,7 +719,10 @@ svg {
   .category-view.ion-nifty-modal .category-view-content {
     text-align: center;
     padding: 15px 20px 30px 20px !important;
-    background-color: white; }
+    background-color: white;
+    z-index: 0; }
+    .category-view.ion-nifty-modal .category-view-content:before {
+      background: transparent !important; }
     .category-view.ion-nifty-modal .category-view-content .cover-image {
       top: -1px;
       width: 120%;
@@ -759,6 +767,7 @@ svg {
     position: absolute;
     left: 0;
     bottom: 0;
+    z-index: 999;
     padding-top: 20px;
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 40%);
     background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, white 40%);

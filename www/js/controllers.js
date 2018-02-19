@@ -10,74 +10,85 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   // IAP SETTINGS
   // Items for Sale: External App Store Ref
   var productIds = [
-    'free_product',
-    'unlock',
     'iap_hot_collection_v1.4',
-    'iap_underholdning_v1',
-    'iap_personlig_collection_v1',
-    'iap_mime_collection_v1',
-    'iap_forklare_dette_collection_v1',
-    'iap_nynne_collection_v1',
-    'iap_tegne_collection_v1'
+    'iap_personlig_collection_v1.4',
+    'iap_mime_collection_v1.4',
+    'iap_forklare_dette_collection_v1.4',
+    'iap_nynne_collection_v1.4'
   ];
   // Items for Sale: Internal Aittable ref
   $scope.productList = [
-    'free_product',
-    'unlock',
     'iap_hot_collection_v1.4',
-    'iap_underholdning_v1',
-    'iap_personlig_collection_v1',
-    'iap_mime_collection_v1',
-    'iap_forklare_dette_collection_v1',
-    'iap_nynne_collection_v1',
-    'iap_tegne_collection_v1'
+    'iap_personlig_collection_v1.4',
+    'iap_mime_collection_v1.4',
+    'iap_forklare_dette_collection_v1.4',
+    'iap_nynne_collection_v1.4'
   ];
 
   // Items already purchased
   $scope.restoreCollectionList = []
 
+  $scope.getAndSetRestoreCollectionList = function() {
+    console.log("Resotre from local storage")
+    $ionicPlatform.ready(function () {
+      $cordovaNativeStorage.getItem("Purchases").then(function(purchases) {
+        console.log("Trying to get storage " + purchases)
+        angular.forEach(purchases, function(data) {
+          console.log(data)
+          $scope.restoreCollectionList.push(data.productId)
+        })
+      });
+    });
+  }
+  $scope.getAndSetRestoreCollectionList()
   
   var spinner = '<ion-spinner icon="dots" class="spinner-stable"></ion-spinner><br/>';
 
   $scope.restoreCollections = function () {
-    inAppPurchase
+    console.log("trying to restore purchases")
+    if(window.cordova) {
+      inAppPurchase
       .restorePurchases()
       .then(function (purchases) {
-        // console.log(JSON.stringify(purchases));
-        angular.forEach(purchases, function(data) {
-          $scope.restoreCollectionList.push(data.productId)
-          console.log(data)
+        $ionicPlatform.ready(function () {
+          $cordovaNativeStorage.setItem("Purchases", purchases).then(function (purchaseList) {
+            console.log("Local Storage Set: " + purchaseList);
+          });
         })
+        $scope.getAndSetRestoreCollectionList()
       })
       .catch(function (err) {
         console.log(err);
-        alert(err)
-        $ionicPopup.alert({
-          title: 'Something went wrong',
-          template: 'Check your console log for the error details'
-        });
       });
+    } else {
+      // TESTING
+      var purchases = []
+      $ionicPlatform.ready(function () {
+        $cordovaNativeStorage.setItem("Purchases", purchases).then(function (purchaseList) {
+          console.log("Local Storage Set: " + purchaseList);
+        });
+      })
+      $scope.getAndSetRestoreCollectionList()
+    }
   };
 
   $scope.loadProducts = function () {
     inAppPurchase
       .getProducts(productIds)
       .then(function (products) {
-        console.log("procuts" + products)
+        console.log("App Store Products" + products)
         $scope.products = products;
         $scope.restoreCollections()
-
       })
       .catch(function (err) {
         console.log(err);
       });
   };
+
   $scope.buy = function (productId) {
     console.log(productId)
-    // var productIdConverted =  "'" + productId + "'"
-    // console.log(productIdConverted)
     if(window.cordova && productId != undefined) {
-      $ionicLoading.show({ template: spinner + 'Purchasing...' });
+      $ionicLoading.show({ template: spinner + 'Vent venligst' });
       inAppPurchase
         .buy(productId)
         .then(function (data) {
@@ -86,26 +97,30 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
           return inAppPurchase.consume(data.type, data.receipt, data.signature);
         })
         .then(function () {
-          var alertPopup = $ionicPopup.alert({
-            title: 'Purchase was successful!',
-            template: 'Check your console log for the transaction data'
-          });
-          alert("Purchase was successful!");
+          $scope.restoreCollections()
           console.log('consume done!');
-          $ionicLoading.hide();
+          $ionicLoading.hide()
         })
         .catch(function (err) {
-          $ionicLoading.hide();
           console.log("ERROER" + err.data);
-          alert("Something went wrong" + err)
-          $ionicPopup.alert({
-            title: 'Something went wrong' + err,
-            template: 'Check your console log for the error details'
-          });
+          $ionicLoading.hide()
         });
+      $timeout(function(){
+        $ionicLoading.hide()
+      }, 8000)
+
+    } else {
+      // TESTING
+      $scope.restoreCollectionList.push(productId)
+      $scope.restoreCollections()
+
     }
   };
 
+  // $scope.justPurchased = false
+  // $scope.$watch($scope.restoreCollectionList, function(val){
+
+  // });
 
   $scope.closeModal = function() {
     $scope.modal.remove()
@@ -222,17 +237,6 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
           console.log(value);
         });
       })
-
-      // $scope.alreadyExist = _.findWhere(playThroughService.getAll(), {categoryId: eachCategory.categoryTitle});
-      // if($scope.alreadyExist == undefined) {
-      //   playThroughService.add({
-      //     categoryId: eachCategory.categoryTitle,
-      //     progress: eachCategory.progress
-      //   });
-      // } else {
-      //   console.log(playedSets)
-      //   console.log("Already thehere ")
-      // }
 
     });
 
@@ -395,10 +399,12 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
               // Check if user already purchased a collection
               console.log("Feed done")            
               if (window.cordova) {
-                $scope.loadProducts()
                 console.log("Feed done cordova")            
-                
+                $scope.loadProducts()
               }
+              $timeout(function() {
+                $scope.collectionsReady = true
+              }, 100);
             }
           })
         })
@@ -449,25 +455,29 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
             }
           })
         }).finally(function() {
-          $timeout(function() {
-            $scope.collectionsReady = true
-          }, 1000);
+
         })
       }
-
     });
-
   }
-
   $scope.loadCollections()
 
+  if(window.cordova) {
+  } else {
+    $scope.showManualLoadingButton = true
+  }
+
+  $scope.showManualLoadingButton = false
   $timeout(function() {
     if($scope.collectionsReady != true) {
-      $scope.loadCollections()
+      $scope.showManualLoadingButton = true
     }
-  }, 8000);
+  }, 5000);
 
-
+  $scope.manuallyLoadCollections = function() {
+    console.log("Load again!")
+    $scope.loadCollections()
+  }
 
 
 

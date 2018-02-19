@@ -1,6 +1,9 @@
 <ion-view view-title="SMASK" hide-nav-bar="true" can-swipe-back=“false”>
   <div class="loadingSpinner" ng-hide="collectionsReady">
-    <img class="loadingSpinner" src="./img/icons/loading-spin.svg" width="50">
+    <img class="loadingSpinner" ng-hide="showManualLoadingButton" src="./img/icons/loading-spin.svg" width="50">
+    <div class="button button-assertive reload-button" ng-if="showManualLoadingButton" ng-click="manuallyLoadCollections()">
+      Try again!
+    </div>
   </div>
   <ion-content>
     <div class="welcome" >
@@ -29,14 +32,10 @@
                           <img class="theIcon" ng-src="{{collection.icon}}">
                         </div>
                       </div>
-                      <div ng-if="collection.isLocked" class="collection-price-banner"
-                      ng-show="productList.indexOf(collection.iapId) !== -1"
-                      ng-hide="restoreCollectionList.indexOf(collection.iapId) !== -1">
-                       <img ng-src="./img/icons/un-lock.png"> {{collection.price}} Kr,- 
-                      </div>
-                      <div ng-if="collection.isLocked" class="collection-price-banner"
-                      ng-if="restoreCollectionList.indexOf(collection.iapId) !== -1">
-                       <img ng-src="./img/icons/un-lock.png"> Købt 
+                      <div class="collection-price-banner"
+                           ng-show="collection.isLocked && restoreCollectionList.indexOf(collection.iapId) == -1"
+                           ng-show="justPurchased == true">
+                        <img ng-src="./img/icons/un-lock.png"> {{collection.price}} Kr,- 
                       </div>
                     </div>
                   </ion-slide-page>
@@ -48,7 +47,7 @@
                     <div class="categoryImage" style="background-image: url('{{ category.cover_image }}')">
                       <div class="overlay" ng-click="openViewCategorie(collection); gotoSlide($index)">
                       </div>
-                      <div ng-if="collection.isLocked" class="lock-icon">
+                      <div class="lock-icon" ng-show="collection.isLocked && restoreCollectionList.indexOf(collection.iapId) == -1">
                         <img ng-src="./img/icons/lock-black.png">
                       </div>
                       <div class="selectBox checked" 

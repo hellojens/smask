@@ -32,17 +32,23 @@
                 <button class="button button-assertive button-block " 
                 ng-click="selectCategorie(category); select(category.id); closeModal()"
                 ng-hide="selectedCollection.isLocked"
+                ng-show="restoreCollectionList.indexOf(selectedCollection.iapId) !== -1"
                 >
                   Vælg
-                  <img ng-src="../img/icons/checkmark.svg">
+                  <img ng-src="./img/icons/checkmark.svg">
+                </button>
+                <button class="button button-assertive button-block " 
+                ng-click="selectCategorie(category); select(category.id); closeModal()"
+                ng-show="selectedCollection.isLocked && restoreCollectionList.indexOf(selectedCollection.iapId) !== -1"
+                >
+                  Vælg
+                  <img ng-src="./img/icons/checkmark.svg">
                 </button>
                 <button class="button button-assertive button-unlock button-block " 
-                ng-click="selectCategorie(category); select(category.id); closeModal()"
-                ng-show="selectedCollection.isLocked"
+                ng-click="buy(selectedCollection.iapId); closeModal()"
+                ng-show="selectedCollection.isLocked && restoreCollectionList.indexOf(selectedCollection.iapId) == -1"
                 >
                   <img ng-src="./img/icons/un-lock.png">
-
-                <!-- {{category.name}} -->
                   Køb {{selectedCollection.price}} Kr,-
                 </button>
               </div>
