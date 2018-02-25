@@ -2,9 +2,18 @@
     <ion-content class="intro" scroll="false">
       <div class="screen-1">
         <!--top-->
-        <img src="./img/logo.png" class="logo animated slideInDown">
+        <img ng-src="./img/logo.png" class="logo animated slideInDown">
         <!--slide-->
+        <!-- <video autoplay id="video-background" muted loop playsinline webkit-playsinline>
+          <source src="./video/intro-v1.mp4" type="video/mp4">
+          <source src="./video/intro-v1.webm" type="video/webm">
+        </video> -->
         <ion-slide-box on-slide-changed="introSlideChange($index)" class="animated fadeIn">
+            <!-- <ion-slide class="slide">
+                <div class="slide-content">
+                  <img class="app-logo animated fadeIn" ng-src="./img/logo-app-icon.png">
+                </div>
+            </ion-slide> -->
             <ion-slide class="slide">
                 <div class="slide-content">
                   <br><br><br><br><br><br>
@@ -22,7 +31,7 @@
             </ion-slide>
             <ion-slide class="slide">
                 <div class="slide-content">
-                    <img class="slide-icon" src="./img/icons/choose-question.png">
+                    <img class="slide-icon" ng-src="./img/icons/choose-question.png">
                     <h1>Man skiftes til at læse spørgsmål op.</h1>
                     <ul>
                       <h2>
@@ -55,7 +64,7 @@
                         <li><b>6.</b> Oplæseren giver point, hvorefter telefonen sendes til venstre til den nye oplæser.</i>
                         <li><b>7.</b> Personen, der netop har svaret rigtigt, vælger den næste kategori.</i>
                         </li>
-                        <li>Dette fortsætter indtil alle spørgsmål er besvaret. Spilleren med flest points vinder, selvfølgelig, KOM NU!
+                        <li><br>Dette fortsætter indtil alle spørgsmål er besvaret. Spilleren med flest points vinder, selvfølgelig, KOM NU!
                         </il>
                     </ul>
                 </div>

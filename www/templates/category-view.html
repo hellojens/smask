@@ -35,14 +35,12 @@
                 ng-show="restoreCollectionList.indexOf(selectedCollection.iapId) !== -1"
                 >
                   Vælg
-                  <img ng-src="./img/icons/checkmark.svg">
                 </button>
                 <button class="button button-assertive button-block " 
                 ng-click="selectCategorie(category); select(category.id); closeModal()"
                 ng-show="selectedCollection.isLocked && restoreCollectionList.indexOf(selectedCollection.iapId) !== -1"
                 >
                   Vælg
-                  <img ng-src="./img/icons/checkmark.svg">
                 </button>
                 <button class="button button-assertive button-unlock button-block " 
                 ng-click="buy(selectedCollection.iapId); closeModal()"

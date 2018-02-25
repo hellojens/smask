@@ -2,7 +2,7 @@
 
   <div class="startGameMenu" ng-if="gameStarted != true && selectedCategories.length > 0">
     <div class="chooseFive">
-      Vælg 5 kategorier
+      Vælg op til 5 kategorier
     </div>
     <ul class="slots active" >
       <li ng-repeat="categories in selectedCategories track by $index" ng-click="selectCategorie(categories)">
@@ -41,7 +41,7 @@
     		<div class="cd-modal-content">
     			<!-- modal content here -->
           <ion-content class="playerList padding no-header">
-            <h4 class="title">Spiller oversigt</h4>
+            <h4 class="title">Spilleroversigt</h4>
             <p>Skub til venstre for at fjerne spillere fra listen</p>
 
             <ion-list class="listlist-dark" show-delete="data.showDelete" show-reorder="data.showReorder">
@@ -71,7 +71,7 @@
                 <label class="item-input-wrapper">
                   <input type="text" ng-model="newPlayerName" placeholder="Tilføj ny spiller">
                 </label>
-                <button class="button button-small" ng-click="addNewPlayer(newPlayerName); newPlayerName = ''">
+                <button style="padding-left:15px; padding-right:15px;" class="button button-small" ng-click="addNewPlayer(newPlayerName); newPlayerName = ''">
                   Tilføj
                 </button>
               </div>

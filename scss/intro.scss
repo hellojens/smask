@@ -285,11 +285,28 @@
       //background-image: linear-gradient(-180deg, #10224B 0%, #5F2758 100%);
       /* Overlay: */
       background: rgba(252,90,90,1);
-      background: linear-gradient(to bottom, rgba(252,90,90,0.5) 0%, rgb(199, 106, 74) 100%);
-      background: -moz-linear-gradient(top, rgba(252,90,90,0.5) 0%, rgb(199, 106, 74) 100%);
-      background: -webkit-linear-gradient(top, rgba(252,90,90,0.5) 0%, rgb(201, 105, 75) 100%);
-      background-size: cover;
-      // text-align: center;
+      background: linear-gradient(to bottom, rgba(252,90,90,0.74) 0%, rgb(199, 106, 74) 100%);
+      background: -moz-linear-gradient(top, rgba(252,90,90,0.74) 0%, rgb(199, 106, 74) 100%);
+      background: -webkit-linear-gradient(top, rgba(252,90,90,0.74) 0%, rgb(201, 105, 75) 100%);
+      // background: linear-gradient(135.44761417086056deg, rgba(255, 112, 67,1) -1.828835227272727%,rgba(252, 90, 90,1) 89.79048295454545%);
+
+    #video-background {
+        /*  making the video fullscreen  */
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        /* top: 0; */
+        left: 0;
+        min-width: 100%;
+        min-height: 100%;
+        width: 100%;
+        height: auto;
+        z-index: -100;
+        padding: 0;
+        margin: 0;
+    }
+    background-size: cover;
+      // text-align: center; 
       font-family: "Roboto", "Roboto", "Segoe UI", sans-serif !important;
       p {
         font-family: "Roboto", "Roboto", "Segoe UI", sans-serif !important;
@@ -308,11 +325,17 @@
           font-size: 14px !important;
       }
       img.logo {
-          width: 50%;
-          position: absolute;
-          top: 65px;
-          left: 25px;
-      }
+				width: 50%;
+				position: absolute;
+				top: 80px;
+				margin: 0 auto;
+				left: 25%;		
+			}
+			img.app-logo {
+				width: 80%;
+				margin: 0 auto;
+				text-align: center;
+			}
       .slide-icon {
         margin-top: 50px;
         width: 60px;
@@ -338,7 +361,7 @@
           width: 100vw;
           max-height: 100vh;
           max-width: 100vw;
-          transition: all 0.3s ease-in;
+          transition: all 0.1s ease-in;
       }
 
 
@@ -348,12 +371,14 @@
       }
 
       .slide-content{
+					padding: 30px;
+					text-align: center;
           position: absolute;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
           width: calc(100% - 50px);
-          transition: all 0.3s ease-in;
+          transition: all 0.1s ease-in;
           font-family: "Roboto", "Roboto", "Segoe UI", sans-serif !important;
 
       }
