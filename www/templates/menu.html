@@ -1,11 +1,11 @@
 <ion-side-menus enable-menu-with-back-views="false">
 
-  <div class="startGameMenu" ng-if="gameStarted != true && selectedCategories.length > 0">
-    <div class="chooseFive">
+  <div class="startGameMenu" ng-if="$state.current.name === 'app.collections'">
+    <div class="chooseFive animated">
       Vælg op til 5 kategorier
     </div>
     <ul class="slots active" >
-      <li ng-repeat="categories in selectedCategories track by $index" ng-click="selectCategorie(categories)">
+      <li ng-repeat="categories in selectedCategories track by $index" class="animated bounceIn" ng-click="selectCategorie(categories)">
         <img ng-src="{{categories.icon}}">
       </li>
     </ul>
@@ -67,7 +67,7 @@
               </ion-item>
             </ion-list>
             <div class="list list-dark">
-              <div class="item item-dark item-input-inset wowbg">
+              <div class="item item-dark item-input-inset wowbg" style="margin-bottom: 80px;">
                 <label class="item-input-wrapper">
                   <input type="text" ng-model="newPlayerName" placeholder="Tilføj ny spiller">
                 </label>
@@ -80,10 +80,10 @@
           <div class="cd-modal-close-text" ng-if="gameStarted" ng-click="startOver(players)">Afslut spil</div>
     		</div>
     	</div>
-
+    	<div class="cd-modal-close cd-modal-close-now settings" ng-click="openSettings()"></div>
     	<div class="cd-modal-close cd-modal-close-now checkmark">Close</div>
     	<div class="cd-modal-close cd-modal-close-now show-intro" ng-class="{'active': gameStarted == true}" ng-click="showIntroInGame()"></div>
-    	<div class="cd-modal-close cd-modal-close-now start-over" ng-class="{'active': gameStarted == true}" ng-click="startOver(players)"></div>
+    	<div class="cd-modal-close cd-modal-close-now start-over" ng-class="{'active': gameStarted == true}" ng-click="gaTrackEnded(); startOver(players); "></div>
     </section>
   </div>
 

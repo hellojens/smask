@@ -17,14 +17,37 @@ angular.module('starter', [
   'ngAnimate',
   'toastr',
   'ngCordova.plugins.nativeStorage',
+  'angularMoment'
 ])
-.run(function($ionicPlatform, $state, $rootScope, $http, $cordovaNativeStorage) {
+.run(function($ionicPlatform, $state, $rootScope, $http, $cordovaNativeStorage, amMoment, $cordovaGoogleAnalytics) {
+  amMoment.changeLocale('da');
   $rootScope.$state = $state;
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
+    console.log("platform ready");
+
+    function _waitForAnalytics(){
+      if(typeof analytics !== 'undefined'){
+        $cordovaGoogleAnalytics.startTrackerWithId('UA-102179136-1')
+        .then(() => {
+          console.log('Google analytics is ready now');
+          //the component is ready and you can call any method here
+          $cordovaGoogleAnalytics.debugMode();
+          $cordovaGoogleAnalytics.trackView('App Launch');
+        })
+        .catch(e => console.log('Error starting GoogleAnalytics', e));
+      }
+      else{
+        setTimeout(function(){
+            _waitForAnalytics();
+        },250);
+      }
+    };
+    _waitForAnalytics();
 
     if (window.cordova && window.cordova.plugins.Keyboard) {
+      console.log("window.cordova");
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
     }

@@ -1,8 +1,8 @@
 <ion-view view-title="SMASK" hide-nav-bar="true" can-swipe-back=“false”>
   <div class="loadingSpinner" ng-hide="collectionsReady">
     <img class="loadingSpinner" ng-hide="showManualLoadingButton" src="./img/icons/loading-spin.svg" width="50">
-    <div class="button button-assertive reload-button" ng-if="showManualLoadingButton" ng-click="manuallyLoadCollections()">
-      Try again!
+    <div class="slow-internet-msg animated fadeIn" ng-if="showSlowMsg">
+      Internettet er helt SMASKET! – Det kan tage lidt tid ...
     </div>
   </div>
   <ion-content>
@@ -44,16 +44,29 @@
                     ng-repeat="category in categories | filter: {collectionId: collection.id} | orderBy: '-publishedAt' track by $index" 
                     ng-class="{'pulse': category.collectionId == selected}"
                     >
-                    <div class="categoryImage" style="background-image: url('{{ category.cover_image }}')">
-                      <div class="overlay" ng-click="openViewCategorie(collection); gotoSlide($index)">
+                    <div class="categoryImage animated" style="background-image: url('{{ category.cover_image }}')">
+                      <div class="overlay" ng-click="openViewCategorie(collection, $index);">
                       </div>
                       <div class="lock-icon" ng-show="collection.isLocked && restoreCollectionList.indexOf(collection.iapId) == -1">
                         <img ng-src="./img/icons/lock-black.png">
+                      </div>
+                      <div class="categoryEmblem" ng-show="category.emblem" style="background-image: url('{{category.emblem}}');">
+                        
                       </div>
                       <div class="selectBox checked" 
                         ng-show="categories.collectionId == category.collectionId" 
                         ng-repeat="categories in selectedCategories" 
                         ng-click="selectCategorie(category); select(category.collectionId)">
+                      </div>
+                      <div class="categoryProgress">
+                        <!-- {{category.progress}} -->
+                        <div class="row">
+                          <div class="col" ng-class="{'played': category.progress >= 1}">·</div>
+                          <div class="col" ng-class="{'played': category.progress >= 2}">·</div>
+                          <div class="col" ng-class="{'played': category.progress >= 3}">·</div>
+                          <div class="col" ng-class="{'played': category.progress >= 4}">·</div>
+                          <div class="col" ng-class="{'played': category.progress == 5}">·</div>
+                        </div>
                       </div>
                     </div>
                     <div class="categoryContent">
@@ -77,7 +90,7 @@
         </div>
 
       </div>
-
+      <br><br><br><br>
     </div>
 
   <!-- </main> -->

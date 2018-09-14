@@ -172,8 +172,8 @@ button:focus {
 
 /*Page Setup*/
 svg {
-  width: 94vw;
-  height: 51vh; }
+  width: 120vw;
+  height: 66vh; }
 
 .title2 {
   height: 10vh;
@@ -191,17 +191,6 @@ svg {
   color: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
-
-@media only screen and (min-width: 768px) {
-  .cd-section {
-    padding: 4em 10%; }
-  .cd-section p {
-    font-size: 1.8rem;
-    line-height: 2; } }
-
-@media only screen and (min-width: 1170px) {
-  .cd-section {
-    padding: 4em 20%; } }
 
 .cd-modal {
   position: fixed;
@@ -254,17 +243,6 @@ svg {
 
 .modal-is-visible .cd-modal .cd-modal-content {
   -webkit-overflow-scrolling: touch; }
-
-@media only screen and (min-width: 768px) {
-  .cd-modal .cd-modal-content {
-    padding: 4em 10%; } }
-
-@media only screen and (min-width: 1170px) {
-  .cd-modal .cd-modal-content {
-    padding: 6em 20%; }
-  .cd-modal p {
-    font-size: 2rem;
-    line-height: 2; } }
 
 .cd-modal-action {
   position: relative; }
@@ -365,10 +343,6 @@ svg {
   -o-transform: scale(1);
   transform: scale(1); }
 
-@media only screen and (min-width: 768px) {
-  .cd-modal-close {
-    top: 70px; } }
-
 .welcome {
   padding-top: 75px !important;
   padding-bottom: 0;
@@ -379,6 +353,10 @@ svg {
     margin-left: 20px;
     position: relative;
     top: -8px; }
+
+@media (min-width: 680px) {
+  .welcome .smask-logo {
+    width: 22%; } }
 
 .loadingSpinner {
   position: absolute;
@@ -394,9 +372,12 @@ svg {
     position: relative;
     width: 50px; }
 
-.reload-button {
+.slow-internet-msg {
   position: absolute;
-  top: 45%; }
+  top: 55%;
+  text-align: center;
+  padding: 50px;
+  font-weight: 600; }
 
 .wowbg {
   background: -webkit-linear-gradient(top, #fc5a5a 0%, #c9694b 100%) !important; }
@@ -451,9 +432,11 @@ svg {
 .playerList {
   background-image: none; }
   .playerList h4 {
-    text-align: center; }
+    text-align: left;
+    padding-left: 5px; }
   .playerList p {
-    text-align: center;
+    text-align: left;
+    padding-left: 5px;
     color: #aaa;
     font-size: 12px;
     margin: -5px 0 10px 0px; }
@@ -514,6 +497,17 @@ svg {
     padding: 0 15px 30px 15px;
     text-align: center; }
 
+.wide-as-needed {
+  overflow: scroll;
+  white-space: nowrap; }
+
+.scroll {
+  min-width: 100%; }
+
+.slideItem {
+  position: relative;
+  display: inline-block; }
+
 .collectionsList {
   position: relative;
   padding: 15px; }
@@ -559,6 +553,7 @@ svg {
     position: relative;
     margin: 0px;
     white-space: nowrap;
+    max-width: 200px;
     margin-bottom: 10px; }
     .collectionsList .collectionsItem.first {
       width: 86px !important; }
@@ -631,6 +626,19 @@ svg {
       box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
       border-radius: 3px;
       background-color: #202020; }
+      .collectionsList .collectionsItem .categoryImage .categoryEmblem {
+        border-radius: 100%;
+        margin: 8px;
+        box-shadow: 0 0px 6px rgba(0, 0, 0, 0.35);
+        height: 22px;
+        width: 22px;
+        position: absolute;
+        top: -15px;
+        left: -13px;
+        background-position: center center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        overflow: hidden; }
       .collectionsList .collectionsItem .categoryImage .collection-price-banner {
         background: #2a76c9;
         border-radius: 104px;
@@ -702,6 +710,40 @@ svg {
         text-overflow: ellipsis;
         overflow: hidden; }
 
+.categoryProgress {
+  position: absolute;
+  width: 34%;
+  bottom: 4px; }
+  .categoryProgress .row {
+    padding: 0px 4px; }
+    .categoryProgress .row .col {
+      padding: 0px;
+      background: rgba(255, 255, 255, 0.55);
+      margin-right: 1px;
+      margin-left: 1px;
+      border-radius: 1px;
+      height: 3px;
+      font-size: 0px;
+      box-shadow: 0 0 7px rgba(0, 0, 0, 0.29); }
+      .categoryProgress .row .col.played, .categoryProgress .row .col.playedE {
+        background: -webkit-linear-gradient(top, #fc5a5a 0%, #c9694b 100%) !important; }
+
+.lastPlayed {
+  color: #454545;
+  font-size: 10px;
+  position: absolute;
+  right: -2px;
+  margin-top: -2px; }
+
+@media (min-width: 680px) {
+  .modal {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    min-height: 100% !important; } }
+
 .modal {
   background: rgba(0, 0, 0, 0.6) !important; }
 
@@ -713,7 +755,7 @@ svg {
   text-transform: uppercase;
   width: 100%;
   position: fixed;
-  top: 8%;
+  top: 6%;
   text-align: center;
   margin: 0 auto;
   padding: 0 30px;
@@ -727,33 +769,55 @@ svg {
 .swiper-pagination-bullet {
   background: #fff !important; }
 
+.fiveOfFive {
+  line-height: 1.2;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 300;
+  text-align: center;
+  display: inline-block;
+  text-transform: none; }
+
+@media (min-width: 680px) {
+  .category-view.ion-nifty-modal {
+    top: 14% !important;
+    max-width: 40% !important; } }
+
 .category-view.ion-nifty-modal {
   width: 80% !important;
   margin: 0 auto;
   min-height: 70% !important;
   border-radius: 3px !important;
   top: 17%;
-  background: #ffffff !important;
   -webkit-animation-duration: 2s; }
+  .category-view.ion-nifty-modal .categoryProgress {
+    position: relative;
+    width: 50%;
+    top: -16px;
+    float: right;
+    right: -7px; }
   .category-view.ion-nifty-modal .category-view-content {
-    text-align: center;
+    text-align: left;
     padding: 15px 20px 30px 20px !important;
     background-color: white;
     z-index: 0; }
     .category-view.ion-nifty-modal .category-view-content:before {
-      background: transparent !important; }
+      background: #ffffff !important;
+      opacity: 1; }
     .category-view.ion-nifty-modal .category-view-content .cover-image {
       top: -1px;
       width: 120%;
       margin: -10%;
-      height: 185px;
+      height: 140px;
       overflow: hidden;
       margin-bottom: 5px; }
       .category-view.ion-nifty-modal .category-view-content .cover-image img {
         width: 100%;
         position: relative;
         top: 50%;
-        transform: translateY(-50%); }
+        transform: translateY(-50%);
+        max-height: none !important;
+        min-height: 100%; }
     .category-view.ion-nifty-modal .category-view-content .collection-icon {
       position: absolute;
       width: 36px;
@@ -761,9 +825,8 @@ svg {
       box-shadow: 0 0 7px rgba(0, 0, 0, 0.3);
       border-radius: 3px;
       background-color: #202020;
-      margin-top: -30px;
-      left: 50%;
-      margin-left: -18px; }
+      margin-top: -25px;
+      left: 0; }
       .category-view.ion-nifty-modal .category-view-content .collection-icon img {
         width: 100%;
         padding: 8px; }
@@ -772,7 +835,7 @@ svg {
     .category-view.ion-nifty-modal .category-view-content h3 {
       padding-top: 20px; }
     .category-view.ion-nifty-modal .category-view-content h4 {
-      padding-top: 15px; }
+      padding-top: 20px; }
     .category-view.ion-nifty-modal .category-view-content h5 {
       padding-top: 15px;
       padding-bottom: 10px;
@@ -782,8 +845,14 @@ svg {
     .category-view.ion-nifty-modal .category-view-content ul li {
       color: #333;
       padding-bottom: 14px; }
+  .category-view.ion-nifty-modal .restore-button {
+    font-size: 13px;
+    padding: 2px 20px 0px 20px; }
+    .category-view.ion-nifty-modal .restore-button::before {
+      padding-right: 15px; }
   .category-view.ion-nifty-modal .modal-button-section {
     position: absolute;
+    right: 0;
     left: 0;
     bottom: 0;
     z-index: 999;
@@ -805,6 +874,14 @@ svg {
             left: -11px;
             top: 3px;
             width: 20px; }
+      .category-view.ion-nifty-modal .modal-button-section .button.button-deselect {
+        position: absolute;
+        z-index: 9;
+        bottom: 10px;
+        width: 62%;
+        display: inline-block;
+        right: 10px;
+        background: white; }
       .category-view.ion-nifty-modal .modal-button-section .button.button-light {
         background-color: white;
         color: #FC5B5A; }
@@ -852,6 +929,8 @@ svg {
 .gameboard .gamelboardList {
   margin: 6px 12px;
   border-radius: 3px; }
+  .gameboard .gamelboardList:last-child {
+    padding-bottom: 60px; }
   .gameboard .gamelboardList h3 {
     padding: 10px 10px 0 10px;
     text-align: center; }
@@ -928,6 +1007,9 @@ svg {
       background: #24272a;
       padding: 10px 20px 12px 20px;
       border-radius: 6px; }
+    .startGameMenu .button.startGameButton.startGameButton-disabled {
+      pointer-events: none;
+      cursor: default; }
 
 .inGameMenu {
   position: fixed;
@@ -963,6 +1045,20 @@ svg {
       left: 6px; }
     .inGameMenu .openInGamMenuButton .playerIcon {
       display: none; }
+  .inGameMenu .cd-section .cd-modal-close.settings {
+    background-size: 40px;
+    opacity: 0.9;
+    background-image: url(../img/icons/about-menu.png);
+    background-position: center;
+    background-size: 23px;
+    background-repeat: no-repeat;
+    top: 30px;
+    right: 13px !important;
+    left: inherit;
+    width: 35px;
+    height: 35px; }
+    .inGameMenu .cd-section .cd-modal-close.settings.active {
+      top: 13px; }
   .inGameMenu .cd-section .cd-modal-close.checkmark {
     background-size: 40px;
     background-image: url(../img/icons/checkmark.svg);
@@ -988,6 +1084,11 @@ svg {
     background-repeat: no-repeat; }
     .inGameMenu .cd-section .cd-modal-close.start-over.active {
       display: block; }
+  @media (min-width: 680px) {
+    .inGameMenu .cd-section .cd-modal-close.cd-modal-close {
+      right: 2%; }
+    .inGameMenu .cd-section .cd-modal-close.start-over, .inGameMenu .cd-section .cd-modal-close.show-intro {
+      left: 2%; } }
   .inGameMenu .cd-section .cd-modal-close-text {
     position: fixed;
     left: 76px;
@@ -1020,8 +1121,7 @@ svg {
     color: rgba(255, 255, 255, 0.53);
     margin-bottom: -20px; }
   .question .selectPlayerWin {
-    padding: 2px;
-    margin-bottom: 10px; }
+    padding: 16px 0px; }
     .question .selectPlayerWin .col {
       margin: 3px;
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.15); }
@@ -1034,31 +1134,42 @@ svg {
       font-size: 14px; }
 
 .scoreBoard-modal.ion-nifty-modal {
-  top: 8%;
-  height: 480px !important; }
+  top: 0;
+  height: 100% !important;
+  border-radius: 0;
+  left: 0;
+  width: 100%;
+  right: 0;
+  bottom: 0; }
+  .scoreBoard-modal.ion-nifty-modal .ion-modal-content-custom {
+    background-color: #061c24; }
+
+.scoreBoard-modal .fireworks-wrapper {
+  margin: -30px; }
 
 .scoreBoard-modal .scoreBoardList {
-  text-align: center; }
-  .scoreBoard-modal .scoreBoardList .fireworks-wrapper {
-    overflow: hidden;
-    height: 210px;
-    margin: -30px;
-    margin-top: -50px;
-    border-bottom: 1px solid #393939; }
+  text-align: center;
+  padding: 0; }
   .scoreBoard-modal .scoreBoardList .playersList {
     background-image: none;
     text-align: center;
-    position: absolute;
-    top: 95px;
-    width: 100%; }
+    width: 100%;
+    background: #061c24;
+    margin-top: 250px;
+    padding-bottom: 250px; }
     .scoreBoard-modal .scoreBoardList .playersList .players {
       font-size: 16px;
       font-weight: 700;
       width: 100%;
-      border-bottom: 1px solid #2d2a2a;
-      padding: 10px;
-      display: inline-block; }
+      border-bottom: 1px dashed #0f303f;
+      padding: 14px 25px;
+      float: left; }
+      .scoreBoard-modal .scoreBoardList .playersList .players:last-child {
+        padding-bottom: 50px;
+        border-bottom: 0px; }
       .scoreBoard-modal .scoreBoardList .playersList .players.theWinner {
+        position: absolute;
+        top: -130px;
         font-size: 34px;
         margin-bottom: 32px;
         border: 0;
@@ -1084,6 +1195,10 @@ svg {
         float: right;
         font-weight: normal; }
 
+.scoreBoard-modal .button {
+  position: absolute;
+  bottom: -11px; }
+
 #toast-container > div {
   height: 100%; }
 
@@ -1106,8 +1221,6 @@ svg {
     text-align: center;
     width: 80%;
     margin: 0 auto; }
-    #toast-container .toast.toast-info .toast-message b {
-      text-transform: capitalize; }
     #toast-container .toast.toast-info .toast-message:after {
       position: absolute;
       bottom: -180px;
@@ -1140,6 +1253,10 @@ svg {
     background-size: 86px;
     background-position: center;
     background-repeat: no-repeat; }
+  @media (min-width: 680px) {
+    #toast-container .toast.toast-info .toast-message {
+      top: -450px;
+      max-width: 40%; } }
 
 #check-height {
   position: absolute;
@@ -11508,7 +11625,7 @@ a.button {
     .intro .screen-1 img.logo {
       width: 50%;
       position: absolute;
-      top: 80px;
+      top: 50px;
       margin: 0 auto;
       left: 25%; }
     .intro .screen-1 img.app-logo {
@@ -11536,7 +11653,7 @@ a.button {
     .intro .screen-1 .slider-slides {
       height: 100vh; }
     .intro .screen-1 .slide-content {
-      padding: 30px;
+      padding: 10px;
       text-align: center;
       position: absolute;
       top: 50%;
@@ -12029,3 +12146,106 @@ a.button {
     .intro .screen-4 .swiper-slide, .intro .screen-4 .slide {
       width: 322px !important;
       height: 481px !important; } }
+
+.progress-indicator {
+  position: fixed;
+  top: 12px;
+  z-index: 9;
+  font-weight: bold;
+  left: -21px;
+  font-size: 14px;
+  background: #7b868d;
+  padding: 0px 8px;
+  border-radius: 3px;
+  line-height: 1.7; }
+
+.meter {
+  height: 16px;
+  /* Can be anything */
+  position: relative;
+  margin: 20px 0 20px 0;
+  /* Just for demo spacing */
+  background: #fff;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.3);
+  -moz-box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.3);
+  border: 1px solid #aaa; }
+
+.meter > span {
+  height: 12px !important;
+  margin: 1px;
+  background: -webkit-linear-gradient(top, #fc5a5a 0%, #c9694b 100%) !important;
+  display: block;
+  height: 100%;
+  -webkit-border-top-right-radius: 2px;
+  -webkit-border-bottom-right-radius: 2px;
+  -moz-border-radius-topright: 2px;
+  -moz-border-radius-bottomright: 2px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  -webkit-border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  background-color: #2bc253;
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #2bc253), color-stop(1, #54f054));
+  background-image: -moz-linear-gradient(center bottom, #2bc253 37%, #54f054 69%);
+  position: relative;
+  overflow: hidden; }
+
+.meter > span:after, .animate > span > span {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(0.25, rgba(255, 255, 255, 0.2)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.2)), color-stop(0.75, rgba(255, 255, 255, 0.2)), color-stop(0.75, transparent), to(transparent));
+  background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+  z-index: 1;
+  -webkit-background-size: 50px 50px;
+  -moz-background-size: 50px 50px;
+  -webkit-animation: move 2s linear infinite;
+  -webkit-border-top-right-radius: 8px;
+  -webkit-border-bottom-right-radius: 8px;
+  -moz-border-radius-topright: 8px;
+  -moz-border-radius-bottomright: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  -webkit-border-top-left-radius: 20px;
+  -webkit-border-bottom-left-radius: 20px;
+  -moz-border-radius-topleft: 20px;
+  -moz-border-radius-bottomleft: 20px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  overflow: hidden; }
+
+.animate > span:after {
+  display: none; }
+
+@-webkit-keyframes move {
+  0% {
+    background-position: 0 0; }
+  100% {
+    background-position: 50px 50px; } }
+
+.orange > span {
+  background-color: #f1a165;
+  background-image: -moz-linear-gradient(top, #f1a165, #f36d0a);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f1a165), color-stop(1, #f36d0a));
+  background-image: -webkit-linear-gradient(#f1a165, #f36d0a); }
+
+.red > span {
+  background-color: #f0a3a3;
+  background-image: -moz-linear-gradient(top, #f0a3a3, #f42323);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f0a3a3), color-stop(1, #f42323));
+  background-image: -webkit-linear-gradient(#f0a3a3, #f42323); }
+
+.nostripes > span > span, .nostripes > span:after {
+  -webkit-animation: none;
+  background-image: none; }

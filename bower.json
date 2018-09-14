@@ -13,6 +13,7 @@
     "underscore": "^1.8.3",
     "animate.css": "^3.5.2",
     "jquery": "~2.1",
-    "ngCordova": "~0.1.23-alpha"
+    "ngCordova": "~0.1.23-alpha",
+    "angular-moment": "^1.2.0"
   }
 }

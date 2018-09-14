@@ -100,8 +100,8 @@
 
 // @import url('https://fonts.googleapis.com/css?family=Unica+One');
 svg {
-  width: 94vw;
-  height: 51vh;
+  width: 120vw;
+  height: 66vh;
 }
 
 
@@ -128,20 +128,20 @@ svg {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-@media only screen and (min-width: 768px) {
-  .cd-section {
-    padding: 4em 10%;
-  }
-  .cd-section p {
-    font-size: 1.8rem;
-    line-height: 2;
-  }
-}
-@media only screen and (min-width: 1170px) {
-  .cd-section {
-    padding: 4em 20%;
-  }
-}
+// @media only screen and (min-width: 768px) {
+//   .cd-section {
+//     padding: 4em 10%;
+//   }
+//   .cd-section p {
+//     font-size: 1.8rem;
+//     line-height: 2;
+//   }
+// }
+// @media only screen and (min-width: 1170px) {
+//   .cd-section {
+//     padding: 4em 20%;
+//   }
+// }
 
 .cd-modal {
   position: fixed;
@@ -195,20 +195,20 @@ svg {
 .modal-is-visible .cd-modal .cd-modal-content {
   -webkit-overflow-scrolling: touch;
 }
-@media only screen and (min-width: 768px) {
-  .cd-modal .cd-modal-content {
-    padding: 4em 10%;
-  }
-}
-@media only screen and (min-width: 1170px) {
-  .cd-modal .cd-modal-content {
-    padding: 6em 20%;
-  }
-  .cd-modal p {
-    font-size: 2rem;
-    line-height: 2;
-  }
-}
+// @media only screen and (min-width: 768px) {
+//   .cd-modal .cd-modal-content {
+//     padding: 4em 10%;
+//   }
+// }
+// @media only screen and (min-width: 1170px) {
+//   .cd-modal .cd-modal-content {
+//     padding: 6em 20%;
+//   }
+//   .cd-modal p {
+//     font-size: 2rem;
+//     line-height: 2;
+//   }
+// }
 
 .cd-modal-action {
   position: relative;
@@ -310,8 +310,8 @@ svg {
   -o-transform: scale(1);
   transform: scale(1);
 }
-@media only screen and (min-width: 768px) {
-  .cd-modal-close {
-    top: 70px;
-  }
-}
+// @media only screen and (min-width: 768px) {
+//   .cd-modal-close {
+//     top: 70px;
+//   }
+// }

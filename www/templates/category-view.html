@@ -1,6 +1,11 @@
 <ion-modal-view class="category-view-slider">
   <ion-content scroll="false">
-    <h2>{{selectedCollection.name}}</h2>
+    <h2>
+      {{selectedCollection.name}}<br>
+      <span class="fiveOfFive">
+        <i class="icon ion-ios-information-outline"></i> Hver kategori indeholder 5 spil af 5 spørgsmål
+      </span>
+    </h2>
     <ion-slides options="categoryViewSliderOptions" slider="data.sliderDelegate2">
       <ion-slide-page ng-repeat="category in categories | filter: {collectionId: selectedCollection.id} | orderBy: '-publishedAt' track by $index">
         <ion-modal-view class="category-view ion-nifty-modal animated slideUp">
@@ -8,6 +13,21 @@
             <ion-content class="category-view-content padding">
               <div class="cover-image">
                 <img ng-src="{{category.cover_image}}">
+              </div>
+              <div class="categoryProgress">
+                <div class="row">
+                  <div class="col" ng-class="{'played': category.progress >= 1}">·</div>
+                  <div class="col" ng-class="{'played': category.progress >= 2}">·</div>
+                  <div class="col" ng-class="{'played': category.progress >= 3}">·</div>
+                  <div class="col" ng-class="{'played': category.progress >= 4}">·</div>
+                  <div class="col" ng-class="{'played': category.progress >= 5}">·</div>
+                </div>
+              </div>
+              <div class="lastPlayed" ng-if="category.lastplayed !== ''">
+                Spillet for <span am-time-ago="category.lastplayed"></span>
+              </div>
+              <div class="lastPlayed" ng-if="category.lastplayed === ''">
+                Aldrig spillet
               </div>
               <div class="collection-icon">
                 <img ng-src="{{selectedCollection.icon}}" alt="">
@@ -17,38 +37,55 @@
                 {{category.description}}
                 <br>
                 <br>
-                <br>
-                <br>
               </p>
               <!-- <b>Progress: {{categoryDetails.progress}} </b> -->
             </ion-content>
-            <div class="row modal-button-section">
-              <div class="col col-33">
-                <button class="button button-outline button-light button-block" ng-click="closeModal()">
-                  Luk
-                </button>
-              </div>
-              <div class="col col-67">
-                <button class="button button-assertive button-block " 
-                ng-click="selectCategorie(category); select(category.id); closeModal()"
-                ng-hide="selectedCollection.isLocked"
-                ng-show="restoreCollectionList.indexOf(selectedCollection.iapId) !== -1"
-                >
-                  Vælg
-                </button>
-                <button class="button button-assertive button-block " 
-                ng-click="selectCategorie(category); select(category.id); closeModal()"
-                ng-show="selectedCollection.isLocked && restoreCollectionList.indexOf(selectedCollection.iapId) !== -1"
-                >
-                  Vælg
-                </button>
-                <button class="button button-assertive button-unlock button-block " 
-                ng-click="buy(selectedCollection.iapId); closeModal()"
-                ng-show="selectedCollection.isLocked && restoreCollectionList.indexOf(selectedCollection.iapId) == -1"
-                >
-                  <img ng-src="./img/icons/un-lock.png">
-                  Køb {{selectedCollection.price}} Kr,-
-                </button>
+            <div class="modal-button-section">
+              <div class="row">
+                <div class="col col-33">
+                  <button class="button button-outline button-light button-block" ng-click="closeModal()">
+                    Luk
+                  </button>
+                </div>
+                <div class="col col-67">
+                  <button class="button button-assertive button-block " 
+                  ng-click="selectCategorie(category); select(category.id); closeModal()"
+                  ng-hide="selectedCollection.isLocked || selectedCategories.length >= 5"
+                  ng-show="restoreCollectionList.indexOf(selectedCollection.iapId) !== -1"
+                  >
+                    Vælg
+                  </button>
+                  <button class="button button-assertive button-block " 
+                  ng-click="selectCategorie(category); select(category.id); closeModal()"
+                  ng-show="selectedCollection.isLocked && restoreCollectionList.indexOf(selectedCollection.iapId) !== -1 && selectedCategories.length >= 5"
+                  >
+                    Vælg
+                  </button>
+                  <button class="button button-assertive button-block " 
+                  ng-click="selectCategorie(category); select(category.id); closeModal()"
+                  ng-show="restoreCollectionList.indexOf(selectedCollection.iapId) !== -1"
+                  >
+                    Vælg 
+                  </button>
+                  <button class="button button-outline button-dark button-block " 
+                  ng-click="closeModal()"
+                  ng-if="selectedCategories.length === 5 && !selectedCollection.isLocked"
+                  >
+                    5/5 valgt
+                  </button>
+                  <button class="button button-assertive button-unlock button-block " 
+                  ng-click="buy(selectedCollection.iapId);"
+                  ng-show="selectedCollection.isLocked && restoreCollectionList.indexOf(selectedCollection.iapId) == -1"
+                  >
+                    <img ng-src="./img/icons/un-lock.png">
+                    Køb {{selectedCollection.price}} Kr,-
+                  </button>
+                  <button class="button button-deselect button-outline button-dark button-block " 
+                  ng-show="categories.collectionId == category.collectionId" 
+                  ng-repeat="categories in selectedCategories" 
+                  ng-click="selectCategorie(category); select(category.collectionId)">
+                    Fjern
+                  </button>
               </div>
             </div>
           </div>

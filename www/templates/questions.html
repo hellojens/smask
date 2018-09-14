@@ -1,8 +1,11 @@
 <ion-view view-title="Question" hide-nav-bar="true">
   <ion-content class="question no-header">
     <center>
-      <div ng-repeat="question in questions">
-        <br>
+      <div style="max-width: 680px;" ng-repeat="question in questions">
+        <span class="fiveOfFive">
+          <i class="icon ion-ios-information-outline"></i> 
+          Husk at oplæseren er dommer og bestemmer hvem der var hurtigst til at buzze sig ind.
+        </span>
         <h3>{{question.name}} </h3>
         <h4>{{question.points}}</h4>
         <p class="theQuestion">{{question.question}}</p>
@@ -17,6 +20,7 @@
           Tryk for svar
         </a>
         <br><br><br>
+
         <div class="row selectPlayerWin">
           <div class="col button button-small button-dark" ng-repeat="player in players" ng-click="updatePlayerPoints(player, question.points)">
             <h1 class="playerName">
@@ -27,6 +31,7 @@
             </div>
           </div>
         </div>
+
         <div class="row selectPlayerWin">
           <div class="col button button-small button-dark" ng-click="noOnKnow()">
             Ingen ved det

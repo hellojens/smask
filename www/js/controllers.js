@@ -1,11 +1,10 @@
 angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-transitions', 'ngAnimate', 'toastr', 'ngCordova.plugins.nativeStorage'])
 
-.controller('AppCtrl', function($ionicPlatform, $scope, $cordovaNativeStorage, $http, $stateParams, $state, $ionicModal, $timeout, $http, $filter, $ionicSlideBoxDelegate, playerService, $ionicHistory, $ionicNativeTransitions, toastr, $ionicPlatform, $q, $ionicLoading, $ionicPopup) {
+.controller('AppCtrl', function($ionicPlatform, $scope, $cordovaNativeStorage, $http, $stateParams, $state, $ionicModal, $timeout, $http, $filter, $ionicSlideBoxDelegate, playerService, $ionicHistory, $ionicNativeTransitions, toastr, $ionicPlatform, $q, $ionicLoading, $ionicPopup, $ionicSideMenuDelegate, moment, $cordovaGoogleAnalytics) {
   $http.defaults.headers.common['Authorization'] = "Bearer " + 'keynHfCb7Qp6svdyV';
   $scope.baseUrl = 'https://api.airtable.com/v0/app04N9yQPQZLwC8T';
   $ionicNativeTransitions.enable(false);
-  
-
+  $ionicSideMenuDelegate.canDragContent(false)
 
   // IAP SETTINGS
   // Items for Sale: External App Store Ref
@@ -14,7 +13,8 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     'iap_personlig_collection_v1.4',
     'iap_mime_collection_v1.4',
     'iap_forklare_dette_collection_v1.4',
-    'iap_nynne_collection_v1.4'
+    'iap_nynne_collection_v1.4',
+    'iap_voksen_collection_v1.6.8'
   ];
   // Items for Sale: Internal Aittable ref
   $scope.productList = [
@@ -22,8 +22,21 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     'iap_personlig_collection_v1.4',
     'iap_mime_collection_v1.4',
     'iap_forklare_dette_collection_v1.4',
-    'iap_nynne_collection_v1.4'
+    'iap_nynne_collection_v1.4',
+    'iap_voksen_collection_v1.6.8'
   ];
+
+  $http.get($scope.baseUrl + '/collections' 
+  ).then( function(collections) {
+    angular.forEach(collections.data.records, function(eachCollection, collectionIndex){
+      if(eachCollection.fields.iap_id != undefined) {
+        console.log(eachCollection.fields.iap_id);
+        $scope.updatedIAPVersionList = eachCollection.fields.iap_id
+      }
+    })
+    $scope.productList.push($scope.updatedIAPVersionList)
+    console.log($scope.productList);
+  })
 
   // Items already purchased
   $scope.restoreCollectionList = []
@@ -40,12 +53,13 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     });
   }
   $scope.getAndSetRestoreCollectionList()
-  
+
   var spinner = '<ion-spinner icon="dots" class="spinner-stable"></ion-spinner><br/>';
 
   $scope.restoreCollections = function () {
     console.log("Fetching Purcheses from Apple")
     if(window.cordova) {
+      $ionicLoading.show({ template: spinner + 'Vent venligst' });
       inAppPurchase
       .restorePurchases()
       .then(function (purchases) {
@@ -55,9 +69,11 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
           });
         })
         $scope.getAndSetRestoreCollectionList()
+        $ionicLoading.hide()
       })
       .catch(function (err) {
         console.log(err);
+        $ionicLoading.hide()
       });
     } else {
       // TESTING
@@ -77,7 +93,6 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
       .then(function (products) {
         console.log("App Store Products" + products)
         $scope.products = products;
-        $scope.restoreCollections()
       })
       .catch(function (err) {
         console.log(err);
@@ -86,31 +101,46 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
   $scope.buy = function (productId) {
     console.log(productId)
-    if(window.cordova && productId != undefined) {
-      $ionicLoading.show({ template: spinner + 'Vent venligst' });
-      inAppPurchase
-        .buy(productId)
-        .then(function (data) {
-          console.log(JSON.stringify(data));
-          return inAppPurchase.consume(data.type, data.receipt, data.signature);
-        })
-        .then(function () {
-          $scope.restoreCollections()
-          console.log('consume done!');
-          $ionicLoading.hide()
-        })
-        .catch(function (err) {
-          console.log("ERROER" + err.data);
-          $ionicLoading.hide()
-        });
-      $timeout(function(){
-        $ionicLoading.hide()
-      }, 8000)
+    var internVersionControle = _.contains($scope.productList, productId);
+    // if(window.cordova && productId != undefined) {
+    if(productId != undefined) {
+      if(internVersionControle != true) {
+        console.log("Out");
+        // Player Modal Controls
 
+        $ionicModal.fromTemplateUrl('./templates/update.html', {
+          scope: $scope,
+          animation: 'slide-in-up'
+        }).then(function(modal) {
+          $scope.modal = modal;
+          $scope.modal.show();
+        });
+
+      } else {
+        $ionicLoading.show({ template: spinner + 'Vent venligst' });
+        inAppPurchase
+          .buy(productId)
+          .then(function (data) {
+            console.log(JSON.stringify(data));
+            return inAppPurchase.consume(data.type, data.receipt, data.signature);
+          })
+          .then(function () {
+            $scope.restoreCollections()
+            console.log('consume done!');
+            $ionicLoading.hide()
+          })
+          .catch(function (err) {
+            console.log("ERROER" + err.data);
+            $ionicLoading.hide()
+          });
+        $timeout(function(){
+          $ionicLoading.hide()
+        }, 8000)
+      }
     } else {
       // TESTING
-      $scope.restoreCollectionList.push(productId)
-      $scope.restoreCollections()
+      // $scope.restoreCollectionList.push(productId)
+      // $scope.restoreCollections()
 
     }
   };
@@ -145,6 +175,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   // Update player points
   $scope.backToScoreBoard = function(player) {
     $ionicHistory.goBack();
+    console.log("Go gamebaor");
     // toastr.info('<b>' + player.name + '</b> skal vælge næste spørgsmål', {
     //   iconClass: 'toast-info choose-question'
     // });
@@ -153,7 +184,8 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     player.points = (player.points + points)
     toastr.info('<b>Send telefonen til venstre...</b>', {
       iconClass: 'toast-info send-left',
-      onTap: function() {
+      tapToDismiss: true,
+      onHidden: function() {
         $scope.backToScoreBoard(player)
       }
     });
@@ -185,6 +217,12 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
       $scope.modal = modal;
       $scope.modal.show();
     });
+    // GA TRACKING
+    $ionicPlatform.ready(function() {
+      if(window.cordova){
+        $cordovaGoogleAnalytics.trackView('Player Board');
+      }
+    })
   };
 
   $scope.selected = null
@@ -201,13 +239,32 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   $scope.selectCategorie = function (cats, index) {
     if($scope.selectedCategories.indexOf(cats, index) !== -1) {
       $scope.selectedCategories.splice($scope.selectedCategories.indexOf(cats, index), 1);
+    } else if($scope.selectedCategories.length >= 5) {
+      console.log("TOO MANY");
     } else {
       $scope.selectedCategories.push(cats)
+      // GA TRACKING
+      $ionicPlatform.ready(function() {
+        if(window.cordova){
+          $cordovaGoogleAnalytics.trackEvent('Category', 'Selected', cats.categoryTitle, 100);
+        }
+      })
     }
     $scope.startGameCategories = $scope.selectedCategories
   }
 
   $scope.gameStarted = false
+
+  // GA TRACKING
+  $scope.gaTrackEnded = function() {
+    angular.forEach($scope.selectedCategories, function(eachCategory, index){
+      $ionicPlatform.ready(function() {
+        if(window.cordova){
+          $cordovaGoogleAnalytics.trackEvent('Category', 'Ended', eachCategory.categoryTitle, 100);
+        }
+      })
+    })
+  }
 
   // Restart game
   $scope.startOver = function(players, index) {
@@ -223,62 +280,22 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
     angular.forEach($scope.selectedCategories, function(eachCategory, index){
       eachCategory.played = false
-
-      if(eachCategory.progress == 4) {
-        var updatedProgress = 0
-      } else {
+      if(eachCategory.progress < 5) {
         var updatedProgress = eachCategory.progress += 1
+      } else {
+        var updatedProgress = 0
       }
-
+      var utc = new Date()
       $ionicPlatform.ready(function () {
-        $cordovaNativeStorage.setItem(eachCategory.categoryTitle, updatedProgress).then(function (value) {
-          console.log(value);
+        $cordovaNativeStorage.setItem(eachCategory.categoryTitle, {progress: updatedProgress, lastplayed: utc}).then(function (value) {
+          eachCategory.lastplayed = value.lastplayed
+          eachCategory.progress = value.progress
         });
       })
-
     });
-
-
-    console.log($scope.selectedCategories)
-
     $scope.selectedCategories = []
-
   }
 
-  // Show intro from in game
-  $scope.showIntroInGame = function() {
-    $ionicModal.fromTemplateUrl('./templates/rules.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
-  };
-
-  // Play again button on scoreBoard
-  $scope.plagAgain = function() {
-    $state.go('app.collections',{cache: false})
-  }
-
-  // Score Board Modal
-  $scope.openScoreBoard = function() {
-    $ionicModal.fromTemplateUrl('./templates/scoreBoard.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
-  };
-
-
-  $scope.skipIntro = function() {
-    $state.go('app.collections');
-    $ionicPlatform.ready(function () {
-      $cordovaNativeStorage.setItem("skip-intro", true)
-    });
-  }
 
   // Start Game
   $scope.startGame = function(startRecordIds) {
@@ -286,6 +303,11 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
       $timeout(function() {
         $('.openInGamMenuButton').trigger('click');
       });
+    } else if($scope.selectedCategories.length == 0) {
+      $('.chooseFive').addClass("pulse");
+      $timeout(function(e){
+        $(".chooseFive").removeClass("pulse");
+      }, 2000)
     } else {
       $scope.gameStarted = true
       angular.forEach($scope.players, function(eachPlayer, eachPlayerIndex){
@@ -305,7 +327,81 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
         }
       });
       $scope.displayInGameMenu = true
+
+      // GA TRACKING
+      $ionicPlatform.ready(function() {
+        if(window.cordova){
+          angular.forEach($scope.startGameCategories, function(eachCategoryName){
+            $cordovaGoogleAnalytics.trackEvent('Category', 'Started', eachCategoryName.categoryTitle, 100);
+          })        
+        }
+      })
     }
+  }
+
+  // Show intro from in game
+  $scope.openSettings = function() {
+    $ionicModal.fromTemplateUrl('./templates/settings.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+      $scope.modal.show();
+    });
+    // GA TRACKING
+    $ionicPlatform.ready(function() {
+      if(window.cordova){
+        $cordovaGoogleAnalytics.trackView('Settings Modal');
+      }
+    })
+  };
+
+  // Show intro from in game
+  $scope.showIntroInGame = function() {
+    $ionicModal.fromTemplateUrl('./templates/rules.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+      $scope.modal.show();
+    });
+    // GA TRACKING
+    $ionicPlatform.ready(function() {
+      if(window.cordova){
+        $cordovaGoogleAnalytics.trackView('Rules Modal');
+      }
+    })
+  };
+
+  // Play again button on scoreBoard
+  $scope.plagAgain = function() {
+    $state.go('app.collections',{cache: false})
+  }
+
+  // Score Board Modal
+  $scope.openScoreBoard = function() {
+    $ionicModal.fromTemplateUrl('./templates/scoreBoard.html', {
+      scope: $scope,
+      animation: 'slide-in-up',
+      backdropClickToClose: false
+    }).then(function(modal) {
+      $scope.modal = modal;
+      $scope.modal.show();
+    });
+    // GA TRACKING
+    $ionicPlatform.ready(function() {
+      if(window.cordova){
+        $cordovaGoogleAnalytics.trackView('Score Board');
+      }
+    })
+  };
+
+
+  $scope.skipIntro = function() {
+    $state.go('app.collections');
+    $ionicPlatform.ready(function () {
+      $cordovaNativeStorage.setItem("skip-intro", true)
+    });
   }
 
 })
@@ -329,7 +425,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
 }])
 
-.controller('CollectionsCtrl', function($scope, $ionicModal, $ionicPlatform, $timeout, $cordovaNativeStorage, $ionicSlideBoxDelegate, $http, $stateParams, $state, $ionicHistory, $q, $ionicSlideBoxDelegate) {
+.controller('CollectionsCtrl', function($scope, $ionicModal, $ionicPlatform, $timeout, $cordovaNativeStorage, $ionicSlideBoxDelegate, $http, $stateParams, $state, $ionicHistory, $q, $ionicSlideBoxDelegate, moment, $cordovaGoogleAnalytics) {
   $scope.displaySlider = true
 
   // $scope.openCollectionView = function(selectedCollectionData) {
@@ -394,12 +490,8 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
             })
           }).finally(function() {
             console.log("Collection Done");
-            
             itemsProcessed++;
-            console.log('itemsProcessed++;: ', itemsProcessed);
-            console.log('included_ids.length: ', included_ids.length);
             if(itemsProcessed === included_ids.length) {
-              console.log('itemsProcessed: ', itemsProcessed);
               $scope.getCategories($scope.collection)
               // Check if user already purchased a collection
               console.log("Feed done")            
@@ -431,6 +523,11 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
               } else {
                 var validIconUrl = ''
               }
+              if(data.fields.hasOwnProperty('emblem')) {
+                var validEmblemUrl = data.fields.emblem[0].thumbnails.large.url
+              } else {
+                var validEmblemUrl = ''
+              }
               var formatCollectionId = data.fields.collection_id
               var categoryDataSets = data.fields.Sets
               $ionicPlatform.ready(function () {
@@ -442,8 +539,10 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
                     categoryTitle: data.fields.Name,
                     description: data.fields.description,
                     cover_image: validCoverImage,
-                    icon: validIconUrl, 
-                    progress: progressValue
+                    icon: validIconUrl,
+                    emblem: validEmblemUrl,
+                    progress: progressValue.progress,
+                    lastplayed: progressValue.lastplayed
                   })
                 }, function (error) {
                   $scope.categories.push({
@@ -454,17 +553,19 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
                     description: data.fields.description,
                     cover_image: validCoverImage,
                     icon: validIconUrl, 
-                    progress: 0
+                    emblem: validEmblemUrl,
+                    progress: 0,
+                    lastplayed: ''
                   })
                 });
               });
-
             }
           })
         }).finally(function() {
           console.log('Categories - Done');
           $timeout(function() {
             $scope.collectionsReady = true
+            $scope.showSlowMsg = false  
           }, 100);
         })
       }
@@ -472,17 +573,12 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   }
   $scope.loadCollections()
 
-  if(window.cordova) {
-  } else {
-    $scope.showManualLoadingButton = true
-  }
-
-  $scope.showManualLoadingButton = false
+  $scope.showSlowMsg = false
   $timeout(function() {
     if($scope.collectionsReady != true) {
-      $scope.showManualLoadingButton = true
+      $scope.showSlowMsg = true
     }
-  }, 5000);
+  }, 10000);
 
   $scope.manuallyLoadCollections = function() {
     console.log("Load again!")
@@ -602,8 +698,13 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     }
   });
 
+
   // View Category
-  $scope.openViewCategorie = function(data) {
+  $scope.openViewCategorie = function(data, index) {
+
+    $timeout(function(e){
+      $(".categoryImage").removeClass("pulse");
+    }, 2000)
     $scope.selectedCollection = data
     $scope.selectedCate = data
     $ionicModal.fromTemplateUrl('./templates/category-view.html', {
@@ -613,27 +714,30 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
       $scope.modal = modal;
       $scope.data = {};
 
-      // angular.forEach($scope.categories, function(value) {
-      //   console.log(value)
-      // })
-
-      // // $scope.collection = $scope.collections
       $scope.categories = $scope.categories
+      $scope.categories.lastplayed
       // var selectedCategoryInCollection = _.findWhere($scope.categories, {collectionId: $scope.selectedCollection.id});
-
+      $(function() {
+        $(".meter > span").each(function() {
+          $(this)
+            .data("origWidth", $(this).width())
+            .width(0)
+            .animate({
+              width: $(this).data("origWidth")
+            }, 1200);
+        });
+      });
       $scope.modal.show();
-
       // Category Modal Slider 
-      $scope.categoryViewSliderOptions = {
-        // effect: 'slide'
-      }
       $scope.data.sliderDelegate2 = null;
-      $scope.gotoSlide = function(index) {
-        $timeout(function(){
-          $scope.data.sliderDelegate2.slideTo(index);
-        },100)
+      $scope.categoryViewSliderOptions = {
       }
+      $timeout(function(){
+        $scope.data.sliderDelegate2.slideTo(index);
+      },100)
+
     });
+
   };
 
   $scope.closeModal = function() {
@@ -650,7 +754,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
 })
 
-.controller('GameBoardCtrl', function($scope, $http, $timeout, $state, $stateParams, $ionicHistory, toastr) {
+.controller('GameBoardCtrl', function($scope, $http, $timeout, $state, $stateParams, $ionicHistory, toastr, $cordovaGoogleAnalytics) {
 
   $scope.setRecordData = $state.params.startGameData
   $scope.selectedGameboard = []
@@ -661,7 +765,12 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   // })
 
   angular.forEach($scope.setRecordData, function(recordData, index){
-    var fetchProgress = recordData.progress
+    console.log(fetchProgress);
+    if(recordData.progress == 5) {
+      var fetchProgress = 0 
+    } else {
+      var fetchProgress = recordData.progress
+    }
     $http.get($scope.baseUrl + '/questions' + '?&filterByFormula=(set_id="'+ recordData.id[fetchProgress] +'")&view=Grid%20view'
     ).then( function(resp) {
       angular.forEach(resp.data.records, function(questionData, index){
@@ -682,6 +791,11 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
     var checkIfAnyFalse = _.findWhere($scope.selectedGameboard, {played: false});
     if($scope.questionsLoaded == true && checkIfAnyFalse == undefined) {
       $scope.startOver();
+      $ionicPlatform.ready(function() {
+        if(window.cordova){
+          $cordovaGoogleAnalytics.trackEvent('Category', 'Completed', eachCategory.categoryTitle, 100);
+        }
+      })
     }
   })
 
@@ -695,7 +809,7 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
 
 })
 
-.controller('QuestionsCtrl', function($scope, $http, $state, $stateParams, $ionicHistory) {
+.controller('QuestionsCtrl', function($scope, $http, $state, $stateParams, $ionicHistory,toastr,$timeout, $cordovaGoogleAnalytics) {
   $scope.theQuestionData = $state.params.questionData
   $scope.questions = []
   if($scope.theQuestionData != null) {
@@ -724,7 +838,14 @@ angular.module('starter.controllers', ['ngCordova','ngStorage', 'ionic-native-tr
   });
 
   $scope.noOnKnow = function() {
-    $ionicHistory.goBack();
+    toastr.info('<b>Send telefonen til venstre...</b>', {
+      iconClass: 'toast-info send-left',
+      tapToDismiss: true,
+      onHidden: function() {
+        $ionicHistory.goBack();
+      }
+    });
+
   };
 
 });
